@@ -1,20 +1,4 @@
+/bin
+/obj
+/.vs
 
-AndonLights/.vs/AndonLights/v17/.suo
-AndonLights/.vs/AndonLights/DesignTimeBuild/.dtbcache.v2
-AndonLights/.vs/AndonLights/v17/.futdcache.v1
-AndonLights/AndonLights/obj/AndonLights.csproj.nuget.dgspec.json
-AndonLights/AndonLights/obj/Container/ContainerDevelopmentMode.cache
-AndonLights/AndonLights/obj/Container/ContainerName.cache
-AndonLights/AndonLights/obj/Container/ContainerRunContext.cache
-AndonLights/AndonLights/obj/Debug/net6.0/AndonLights.AssemblyInfo.cs
-AndonLights/AndonLights/obj/Debug/net6.0/AndonLights.AssemblyInfoInputs.cache
-AndonLights/AndonLights/obj/Debug/net6.0/AndonLights.csproj.AssemblyReference.cache
-AndonLights/AndonLights/obj/Debug/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs
-AndonLights/AndonLights/obj/Debug/net6.0/AndonLights.GeneratedMSBuildEditorConfig.editorconfig
-AndonLights/AndonLights/obj/Debug/net6.0/AndonLights.assets.cache
-AndonLights/AndonLights/obj/Container/ContainerId.cache
-AndonLights/AndonLights/obj/AndonLights.csproj.nuget.g.targets
-AndonLights/AndonLights/obj/Debug/net6.0/AndonLights.GlobalUsings.g.cs
-AndonLights/AndonLights/obj/project.nuget.cache
-AndonLights/AndonLights/obj/project.assets.json
-AndonLights/AndonLights/obj/AndonLights.csproj.nuget.g.props
