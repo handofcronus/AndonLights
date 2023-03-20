@@ -5,7 +5,7 @@ namespace AndonLights.Model;
 public class Session
 {
     public int Id { get; set; }
-    public int LenghtOfSessionInMinutes { get; set; }
+    public double LenghtOfSessionInMinutes { get; set; }
     public string? ErrorMessage { get; set; }
     public required DateTime InTime { get; set; }
     public DateTime OutTime { get; set; }
@@ -26,7 +26,7 @@ public class Session
         TimeSpan? ts = OutTime - InTime;
         if(ts.HasValue)
         {
-            LenghtOfSessionInMinutes = ts.Value.Minutes;
+            LenghtOfSessionInMinutes = ts.Value.TotalMinutes;
         }
         
     }

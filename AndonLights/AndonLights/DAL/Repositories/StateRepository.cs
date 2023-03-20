@@ -1,6 +1,7 @@
-﻿namespace AndonLights.Repositories
+﻿using AndonLights.DAL.Interfaces;
+
+namespace AndonLights.Repositories;
+
+public class StateRepository : IStateRepo
 {
-    public class StateRepository
-    {
-    }
 }

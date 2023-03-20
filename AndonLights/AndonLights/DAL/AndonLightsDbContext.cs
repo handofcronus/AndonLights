@@ -26,12 +26,15 @@ public class AndonLightsDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+        modelBuilder.Entity<Session>().ToTable("sessions");
 
         modelBuilder.Entity<Session>().HasKey(s => s.Id);
+        modelBuilder.Entity<Session>().Property(s=>s.ErrorMessage).HasMaxLength(150);
         
 
     }
 
-    public AndonLightsDbContext() { }
+    public AndonLightsDbContext() { }  
+
+    
 }

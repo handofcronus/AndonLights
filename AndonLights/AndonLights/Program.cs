@@ -11,6 +11,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 builder.Services.AddDbContext<AndonLightsDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("AndonLights")));
 
@@ -30,15 +32,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
 
-
-using (var db = new AndonLightsDbContext())
+using (var serviceScope = app.Services.CreateScope())
 {
-    Session test = new Session { InTime= DateTime.Now, OutTime= new DateTime(2024,12,12), ErrorMessage="testerror1" };
-    db.Sessions.Add(test);
-    db.SaveChanges();
+    var context = serviceScope.ServiceProvider.GetRequiredService<AndonLightsDbContext>();
+    context.Database.EnsureCreated();
 }
 
+using var db = new AndonLightsDbContext();
+Session session = new Session() { InTime =new DateTime(2023,03,18), ErrorMessage = "test1" };
+session.closeSession(DateTime.Now);
+db.Sessions.Add(session);
+db.SaveChanges();
+Console.WriteLine(session.Id);
+app.Run();
 
 
