@@ -1,9 +1,5 @@
 ﻿namespace AndonLights.DAL.Interfaces;
 
-public interface ISessionRepo
+public interface ISessionService
 {
-
-
-
-
 }

@@ -2,7 +2,7 @@
 
 namespace AndonLights.Services;
 
-public class SessionService
+public class SessionService :ISessionService
 {
 
     private ISessionRepo _sessionRepo;
