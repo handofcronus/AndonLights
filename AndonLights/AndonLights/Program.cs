@@ -1,5 +1,9 @@
 using AndonLights.DAL;
+using AndonLights.DAL.Interfaces;
+using AndonLights.DTOs;
 using AndonLights.Model;
+using AndonLights.Repositories;
+using AndonLights.Services;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -8,10 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<IAndonLightRepo, AndonLightRepository>();
+builder.Services.AddScoped<IAndonLightService, AndonLightService>();
+builder.Services.AddScoped<ISessionRepo, SessionRepository>();
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IStateRepo, StateRepository>();
+builder.Services.AddScoped<IStateService, StateService>();
 
 builder.Services.AddDbContext<AndonLightsDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("AndonLights")));
@@ -39,12 +47,9 @@ using (var serviceScope = app.Services.CreateScope())
     context.Database.EnsureCreated();
 }
 
-using var db = new AndonLightsDbContext();
-Session session = new Session() { InTime =new DateTime(2023,03,18), ErrorMessage = "test1" };
-session.closeSession(DateTime.Now);
-db.Sessions.Add(session);
-db.SaveChanges();
-Console.WriteLine(session.Id);
+
+
+
 app.Run();
 
 
