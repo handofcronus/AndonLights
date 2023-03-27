@@ -21,17 +21,7 @@ public class State
     //tesztadatok
     public void updateDailyStats()
     {
-        bool InDailyStats = false;
-        DailyStateStats dailystateStats = null;
-        foreach (var dailyStat in _dailyStats)
-        {
-            if (dailyStat.DayOfStats.Date == DateTime.Today)
-            {
-                dailystateStats = dailyStat;
-                InDailyStats = true;
-                break;
-            }
-        }
+        DailyStateStats todaysStats = GetADailyStatOrDefault(DateTime.Today);
         var sessionsThisDay = GetSessionsFromADay(DateTime.Now, _closedSessions);
         int numEntries = 0;
         double minutesSpentInState = 0.0;
@@ -40,34 +30,17 @@ public class State
             numEntries++;
             minutesSpentInState += sessionThisDay.LenghtOfSessionInMinutes;
         }
-        
-        if (InDailyStats)
+        todaysStats.MinutesSpentInState = minutesSpentInState;
+        todaysStats.NumberOfEntries = numEntries;
+        if (!_dailyStats.Contains(todaysStats))
         {
-            dailystateStats.MinutesSpentInState = minutesSpentInState;
-            dailystateStats.NumberOfEntries = numEntries;
+            _dailyStats.Add(todaysStats);
         }
-        else
-        {
-            dailystateStats= new DailyStateStats(numEntries,minutesSpentInState);
-            _dailyStats.Add(dailystateStats);
-        }
-        
-        
     }
     //tesztadatok
     public void updateMonthlyStats()
     {
-        bool InMonthlyStats = false;
-        MonthlyStateStats monthlyStateStats = null;
-        foreach (var monthlyStat in _monthlyStats)
-        {
-            if (monthlyStat.MonthOfStats.Year == DateTime.Today.Year && monthlyStat.MonthOfStats.Month == DateTime.Today.Month)
-            {
-                monthlyStateStats = monthlyStat;
-                InMonthlyStats = true;
-                break;
-            }
-        }
+        MonthlyStateStats monthlyStateStats = GetAMonthlyStatsOrDefault(DateTime.Today);
         var sessionsThisMonth = GetSessionsFromAMonth(DateTime.Now, _closedSessions);
         int numEntries = 0;
         double minutesSpentInState = 0.0;
@@ -76,20 +49,12 @@ public class State
             numEntries++;
             minutesSpentInState += session.LenghtOfSessionInMinutes; 
         }
-        
-        if(InMonthlyStats)
+        monthlyStateStats.NumberOfEntries = numEntries;
+        monthlyStateStats.MinutesSpentInState = minutesSpentInState;
+        if(!_monthlyStats.Contains(monthlyStateStats))
         {
-            monthlyStateStats.MinutesSpentInState = minutesSpentInState;
-            monthlyStateStats.NumberOfEntries = numEntries;
-        }
-        else
-        {
-            monthlyStateStats = new MonthlyStateStats(numEntries,minutesSpentInState);
             _monthlyStats.Add(monthlyStateStats);
         }
-
-
-
     }
 
     public void activateState(DateTime timeOfSwitch)
@@ -113,5 +78,28 @@ public class State
     private List<Session> GetSessionsFromAMonth(DateTime date, List<Session> closedSessions)
     {
         return closedSessions.FindAll(x => x.InTime.Date.Year == date.Date.Year && x.InTime.Date.Month == date.Date.Month);
+    }
+
+    private DailyStateStats GetADailyStatOrDefault(DateTime dateTime)
+    {
+        foreach (var dailyStat in _dailyStats)
+        {
+            if (dailyStat.DayOfStats.Date == dateTime.Date)
+            {
+                return dailyStat;
+            }
+        }
+        return new DailyStateStats();
+    }
+    private MonthlyStateStats GetAMonthlyStatsOrDefault(DateTime dateTime)
+    {
+        foreach (var monthlyStat in _monthlyStats)
+        {
+            if (monthlyStat.MonthOfStats.Date.Year == dateTime.Year && monthlyStat.MonthOfStats.Month == dateTime.Month)
+            {
+                return monthlyStat;
+            }
+        }
+        return new MonthlyStateStats();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AndonLights.DTOs;
 
-namespace AndonLights.DAL.Interfaces;
+namespace AndonLights.Services.Interfaces;
 
 public interface IStateService
 {

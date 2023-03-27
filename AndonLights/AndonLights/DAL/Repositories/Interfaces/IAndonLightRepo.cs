@@ -2,7 +2,7 @@
 using AndonLights.Model;
 using System.Collections;
 
-namespace AndonLights.DAL.Interfaces;
+namespace AndonLights.DAL.Repositories.Interfaces;
 
 public interface IAndonLightRepo
 {

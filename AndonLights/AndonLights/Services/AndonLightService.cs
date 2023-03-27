@@ -1,7 +1,7 @@
-﻿
-using AndonLights.DAL.Interfaces;
+﻿using AndonLights.DAL.Repositories.Interfaces;
 using AndonLights.DTOs;
 using AndonLights.Model;
+using AndonLights.Services.Interfaces;
 
 namespace AndonLights.Services;
 

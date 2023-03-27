@@ -1,7 +1,7 @@
 ﻿using AndonLights.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-
+//using Microsoft.Extensions.Configuration;
+using System.Configuration;
 namespace AndonLights.DAL;
 
 
@@ -19,7 +19,8 @@ public class AndonLightsDbContext : DbContext
         base.OnConfiguring(optionsBuilder);
         if(!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer("server=.\\sqlexpress ; database=AndonLightsDB ; Integrated Security=true; MultipleActiveResultSets=true; TrustServerCertificate=true");
+            var builder = WebApplication.CreateBuilder();
+            optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("AndonLights"));
         }
     }
 

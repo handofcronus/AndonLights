@@ -1,9 +1,10 @@
 using AndonLights.DAL;
-using AndonLights.DAL.Interfaces;
+using AndonLights.DAL.Repositories.Interfaces;
 using AndonLights.DTOs;
 using AndonLights.Model;
 using AndonLights.Repositories;
 using AndonLights.Services;
+using AndonLights.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -14,12 +15,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddScoped<IAndonLightRepo, AndonLightRepository>();
 builder.Services.AddScoped<IAndonLightService, AndonLightService>();
-builder.Services.AddScoped<ISessionRepo, SessionRepository>();
-builder.Services.AddScoped<ISessionService, SessionService>();
+
 builder.Services.AddScoped<IStateRepo, StateRepository>();
 builder.Services.AddScoped<IStateService, StateService>();
+
+builder.Services.AddScoped<ISessionRepo, SessionRepository>();
+builder.Services.AddScoped<ISessionService, SessionService>();
 
 builder.Services.AddDbContext<AndonLightsDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("AndonLights")));
