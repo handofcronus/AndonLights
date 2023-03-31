@@ -2,6 +2,8 @@
 
 public class MonthlyStateStats
 {
+ 
+    public int Id { get; set; }
     public int NumberOfEntries { get; set; }
     public double MinutesSpentInState { get; set; }
     public DateTime MonthOfStats { get;set;} 
@@ -17,4 +19,17 @@ public class MonthlyStateStats
         NumberOfEntries = numE;
         MinutesSpentInState = minSpent;
     }
+
+    public void Calc(List<Session> sessionsThisMonth)
+    {
+        int numEntries = sessionsThisMonth.Count;
+        double minutesSpentInState = 0.0;
+        foreach (var session in sessionsThisMonth)
+        {
+            minutesSpentInState += session.LenghtOfSessionInMinutes;
+        }
+        this.NumberOfEntries = numEntries;
+        this.MinutesSpentInState = minutesSpentInState;
+    }
+
 }

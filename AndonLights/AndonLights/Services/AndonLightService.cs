@@ -21,9 +21,9 @@ public class AndonLightService :IAndonLightService
         List<AndonLightDTO> lights = new List<AndonLightDTO>
         {
             new AndonLightDTO { ID = 1, Name = "test1", State = LightStates.Yellow },
-            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Blue }
+            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Green }
         };
-        return lights.Find(x => x.ID == id);
+        return lights.Single(x => x.ID == id);
     }
 
     public IEnumerable<AndonLightDTO> GetLights()
@@ -33,7 +33,7 @@ public class AndonLightService :IAndonLightService
         List<AndonLightDTO> lights = new List<AndonLightDTO>
         {
             new AndonLightDTO { ID = 1, Name = "test1", State = LightStates.Yellow },
-            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Blue }
+            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Green }
         };
         return lights;
     }
@@ -58,9 +58,10 @@ public class AndonLightService :IAndonLightService
         List<AndonLightDTO> lights = new List<AndonLightDTO>
         {
             new AndonLightDTO { ID = 1, Name = "test1", State = LightStates.Yellow,time = DateTime.MinValue },
-            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Blue,time = DateTime.MinValue }
+            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Green,time = DateTime.MinValue }
         };
-        var light = lights.Find(x => x.ID == andonLight.ID);
+        
+        var light = lights.Single(x => x.ID == andonLight.ID);
         light.State = andonLight.State;
         light.time = andonLight.time;
         light.Name = andonLight.Name;

@@ -1,21 +1,24 @@
 ﻿using AndonLights.DTOs;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
+using System.Collections;
 
 namespace AndonLights.Model;
 
 public class AndonLight
 {
     public int Id { get; set; }
+    public int GreenStateId { get; set; }
+    public int YellowStateId { get; set; }
+    public int RedStateId { get; set; }
     public LightStates CurrentState { get; set; }
 
     public string Name { get; set; }
 
     public required DateTime DateOfCreation { get; init; }
 
-    private State _greenState;
-    private State _yellowState;
-    private State _redState;
-    private State _blueState;
+    public List<State> States { get;set; }
+    
 
     [SetsRequiredMembers]
     public AndonLight(string Name)
@@ -23,10 +26,13 @@ public class AndonLight
         this.Name = Name;
         CurrentState = LightStates.Green;
         DateOfCreation = DateTime.Now;
-        _greenState = new State();
-        _yellowState = new State();
-        _redState = new State();
-        _blueState = new State();
+        States = new List<State>
+        {
+            new State(LightStates.Green),
+            new State(LightStates.Yellow),
+            new State(LightStates.Red),
+        };
+
     }
 
     public void SwitchedState(AndonLightDTO andonLight)
@@ -34,33 +40,43 @@ public class AndonLight
         switch (this.CurrentState)
         {
             case LightStates.Green:
-                _greenState.closeState(andonLight.time);
+                getStateWithColour(LightStates.Green).closeState(andonLight.time);
                 break;
             case LightStates.Yellow:
-                _yellowState.closeState(andonLight.time);
+                getStateWithColour(LightStates.Yellow).closeState(andonLight.time);
                 break;
             case LightStates.Red:
-                _redState.closeState(andonLight.time);
-                break;
-            case LightStates.Blue:
-                _blueState.closeState(andonLight.time);
+                getStateWithColour(LightStates.Red).closeState(andonLight.time);
                 break;
         }
         switch(andonLight.State)
         {
             case LightStates.Green:
-                _greenState.activateState(andonLight.time);
+                getStateWithColour(LightStates.Green).activateState(andonLight.time);
+                CurrentState = LightStates.Green;
                 break;
             case LightStates.Yellow:
-                _yellowState.activateState(andonLight.time);
+                getStateWithColour(LightStates.Yellow).activateState(andonLight.time);
+                CurrentState = LightStates.Yellow;
                 break;
             case LightStates.Red:
-                _redState.activateState(andonLight.time);
-                break;
-            case LightStates.Blue:
-                _blueState.activateState(andonLight.time);
+                getStateWithColour(LightStates.Red).activateState(andonLight.time);
+                CurrentState = LightStates.Red;
                 break;
         }
+    }
+
+    private State getStateWithColour(LightStates lightStates) 
+    {
+        if(lightStates == LightStates.Green)
+        {
+            return States[0];
+        }
+        if(lightStates == LightStates.Yellow)
+        { 
+            return States[1];
+        }
+        return States[2];
     }
 
 }

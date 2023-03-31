@@ -22,6 +22,93 @@ namespace AndonLights.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AndonLights.Model.AndonLight", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfCreation")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GreenStateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RedStateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YellowStateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AndonLights", (string)null);
+                });
+
+            modelBuilder.Entity("AndonLights.Model.DailyStateStats", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DayOfStats")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("MinutesSpentInState")
+                        .HasColumnType("float");
+
+                    b.Property<int>("NumberOfEntries")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StateID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StateID");
+
+                    b.ToTable("DailyStateStats", (string)null);
+                });
+
+            modelBuilder.Entity("AndonLights.Model.MonthlyStateStats", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("MinutesSpentInState")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("MonthOfStats")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NumberOfEntries")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StateID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StateID");
+
+                    b.ToTable("MonthlyStateStats", (string)null);
+                });
+
             modelBuilder.Entity("AndonLights.Model.Session", b =>
                 {
                     b.Property<int>("Id")
@@ -31,20 +118,94 @@ namespace AndonLights.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ErrorMessage")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTime>("InTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LenghtOfSessionInMinutes")
-                        .HasColumnType("int");
+                    b.Property<double>("LenghtOfSessionInMinutes")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("OutTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("StateId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Sessions");
+                    b.HasIndex("StateId");
+
+                    b.ToTable("Sessions", (string)null);
+                });
+
+            modelBuilder.Entity("AndonLights.Model.State", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("LightID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StateColour")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LightID");
+
+                    b.ToTable("States", (string)null);
+                });
+
+            modelBuilder.Entity("AndonLights.Model.DailyStateStats", b =>
+                {
+                    b.HasOne("AndonLights.Model.State", null)
+                        .WithMany("DailyStats")
+                        .HasForeignKey("StateID");
+                });
+
+            modelBuilder.Entity("AndonLights.Model.MonthlyStateStats", b =>
+                {
+                    b.HasOne("AndonLights.Model.State", null)
+                        .WithMany("MonthlyStats")
+                        .HasForeignKey("StateID");
+                });
+
+            modelBuilder.Entity("AndonLights.Model.Session", b =>
+                {
+                    b.HasOne("AndonLights.Model.State", null)
+                        .WithMany("ClosedSessions")
+                        .HasForeignKey("StateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AndonLights.Model.State", b =>
+                {
+                    b.HasOne("AndonLights.Model.AndonLight", null)
+                        .WithMany("States")
+                        .HasForeignKey("LightID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AndonLights.Model.AndonLight", b =>
+                {
+                    b.Navigation("States");
+                });
+
+            modelBuilder.Entity("AndonLights.Model.State", b =>
+                {
+                    b.Navigation("ClosedSessions");
+
+                    b.Navigation("DailyStats");
+
+                    b.Navigation("MonthlyStats");
                 });
 #pragma warning restore 612, 618
         }
