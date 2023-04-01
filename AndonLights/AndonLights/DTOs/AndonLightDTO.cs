@@ -10,4 +10,9 @@ public class AndonLightDTO
     public string? ErrorMessage { get; set; }
 
     public DateTime time { get; set; } = DateTime.Now;
+
+    public AndonLightDTO(string name)
+    {
+        Name = name;
+    }
 }

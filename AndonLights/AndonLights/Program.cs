@@ -45,6 +45,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 
+
 using (var serviceScope = app.Services.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<AndonLightsDbContext>();
@@ -56,10 +57,10 @@ using var db = new AndonLightsDbContext();
 var light = new AndonLight("testLight2");
 db.Add(light);
 db.SaveChanges();
-light.SwitchedState(new AndonLightDTO { State = LightStates.Red });
-light.SwitchedState(new AndonLightDTO { State = LightStates.Green });
-light.SwitchedState(new AndonLightDTO { State = LightStates.Yellow });
-light.SwitchedState(new AndonLightDTO { State = LightStates.Red });
+light.SwitchedState(new AndonLightDTO("asd") { State = LightStates.Red });
+light.SwitchedState(new AndonLightDTO("asd") { State = LightStates.Green });
+light.SwitchedState(new AndonLightDTO("asd") { State = LightStates.Yellow });
+light.SwitchedState(new AndonLightDTO("asd") { State = LightStates.Red });
 
 
 

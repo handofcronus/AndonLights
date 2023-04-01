@@ -47,6 +47,16 @@ public class State
         }
     }
 
+    public DailyStateStats? GetDailyStats(DateTime time)
+    {
+        return DailyStats.Find(x => x.DateOfStats.Date == time.Date);
+    }
+    public MonthlyStateStats? GetMonthlyStats(DateTime time)
+    {
+        return MonthlyStats.Find(x => x.DateOfStats.Date == time.Date);
+    }
+
+
     public void activateState(DateTime timeOfSwitch)
     {
         _currentSession = new Session(timeOfSwitch);
@@ -71,7 +81,7 @@ public class State
     {
         foreach (var dailyStat in DailyStats)
         {
-            if (dailyStat.DayOfStats.Date == dateTime.Date)
+            if (dailyStat.DateOfStats.Date == dateTime.Date)
             {
                 return dailyStat;
             }
@@ -82,7 +92,7 @@ public class State
     {
         foreach (var monthlyStat in MonthlyStats)
         {
-            if (monthlyStat.MonthOfStats.Date.Year == dateTime.Year && monthlyStat.MonthOfStats.Month == dateTime.Month)
+            if (monthlyStat.DateOfStats.Date.Year == dateTime.Year && monthlyStat.DateOfStats.Month == dateTime.Month)
             {
                 return monthlyStat;
             }

@@ -8,9 +8,6 @@ namespace AndonLights.Model;
 public class AndonLight
 {
     public int Id { get; set; }
-    public int GreenStateId { get; set; }
-    public int YellowStateId { get; set; }
-    public int RedStateId { get; set; }
     public LightStates CurrentState { get; set; }
 
     public string Name { get; set; }
@@ -66,6 +63,18 @@ public class AndonLight
         }
     }
 
+    public StatsResponseDTO GetDailyStatsFromStates(StatsQuestionDTO questionDTO)
+    {
+        return new StatsResponseDTO(States[0].GetDailyStats(questionDTO.Time)
+            , States[1].GetDailyStats(questionDTO.Time)
+            , States[2].GetDailyStats(questionDTO.Time));
+    }
+    public StatsResponseDTO GetMonthlyStatsFromStates(StatsQuestionDTO questionDTO)
+    {
+        return new StatsResponseDTO(States[0].GetMonthlyStats(questionDTO.Time)
+            , States[1].GetMonthlyStats(questionDTO.Time)
+            , States[2].GetMonthlyStats(questionDTO.Time));
+    }
     private State getStateWithColour(LightStates lightStates) 
     {
         if(lightStates == LightStates.Green)

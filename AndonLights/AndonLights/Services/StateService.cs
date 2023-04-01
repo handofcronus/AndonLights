@@ -15,11 +15,11 @@ public class StateService : IStateService
 
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion)
     {
-        throw new NotImplementedException();
+        return _stateRepo.GetDailyStats(statsQuestion);
     }
 
     public StatsResponseDTO GetMonthlyStats(StatsQuestionDTO statsQuestion)
     {
-        throw new NotImplementedException();
+        return _stateRepo.GetMonthlyStats(statsQuestion);
     }
 }

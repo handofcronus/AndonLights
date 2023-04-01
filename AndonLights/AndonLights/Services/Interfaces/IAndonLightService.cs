@@ -11,5 +11,5 @@ public interface IAndonLightService
 
     public bool DeleteLight(int id);
 
-    public AndonLightDTO UpdateLight(AndonLightDTO andonLight);
+    public AndonLightDTO? UpdateLight(AndonLightDTO andonLight);
 }
