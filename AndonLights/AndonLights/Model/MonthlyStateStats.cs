@@ -3,6 +3,4 @@
 public class MonthlyStateStats : StatsBase
 {
     public MonthlyStateStats() :base() { }
-    
-
 }

@@ -16,6 +16,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHostedService<TimedHostedService>();
+
 builder.Services.AddScoped<IAndonLightRepo, AndonLightRepository>();
 builder.Services.AddScoped<IAndonLightService, AndonLightService>();
 
@@ -54,6 +56,7 @@ using (var serviceScope = app.Services.CreateScope())
 
 
 using var db = new AndonLightsDbContext();
+
 var light = new AndonLight("testLight2");
 db.Add(light);
 db.SaveChanges();

@@ -3,8 +3,4 @@
 public class DailyStateStats : StatsBase
 {
     public DailyStateStats() : base() { }
-
-    
-
-
 }

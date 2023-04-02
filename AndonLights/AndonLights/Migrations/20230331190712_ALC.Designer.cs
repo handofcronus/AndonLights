@@ -4,6 +4,7 @@ using AndonLights.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AndonLights.Migrations
 {
     [DbContext(typeof(AndonLightsDbContext))]
-    partial class AndonLightsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230331190712_ALC")]
+    partial class ALC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +40,18 @@ namespace AndonLights.Migrations
                     b.Property<DateTime>("DateOfCreation")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("GreenStateId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RedStateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YellowStateId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -54,7 +66,7 @@ namespace AndonLights.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateOfStats")
+                    b.Property<DateTime>("DayOfStats")
                         .HasColumnType("datetime2");
 
                     b.Property<double>("MinutesSpentInState")
@@ -81,11 +93,11 @@ namespace AndonLights.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateOfStats")
-                        .HasColumnType("datetime2");
-
                     b.Property<double>("MinutesSpentInState")
                         .HasColumnType("float");
+
+                    b.Property<DateTime>("MonthOfStats")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("NumberOfEntries")
                         .HasColumnType("int");
@@ -142,9 +154,8 @@ namespace AndonLights.Migrations
                     b.Property<int>("LightID")
                         .HasColumnType("int");
 
-                    b.Property<string>("StateColour")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("StateColour")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 

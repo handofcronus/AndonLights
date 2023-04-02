@@ -15,6 +15,7 @@ public class AndonLight
     public required DateTime DateOfCreation { get; init; }
 
     public List<State> States { get;set; }
+
     
 
     [SetsRequiredMembers]

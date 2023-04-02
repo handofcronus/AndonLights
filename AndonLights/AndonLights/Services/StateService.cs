@@ -15,11 +15,32 @@ public class StateService : IStateService
 
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion)
     {
+        var light = _stateRepo.GetDailyStats(statsQuestion);
+
+
         return _stateRepo.GetDailyStats(statsQuestion);
     }
 
     public StatsResponseDTO GetMonthlyStats(StatsQuestionDTO statsQuestion)
     {
         return _stateRepo.GetMonthlyStats(statsQuestion);
+    }
+
+    public void UpdateAllDailyStats()
+    {
+        var states = _stateRepo.GetAllStates();
+        foreach (var state in states) 
+        {
+            state.updateDailyStats();
+        }
+    }
+
+    public void UpdateAllMonthlyStats()
+    {
+        var states = _stateRepo.GetAllStates();
+        foreach (var state in states)
+        {
+            state.updateMonthlyStats();
+        }
     }
 }
