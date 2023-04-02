@@ -1,4 +1,5 @@
-﻿using AndonLights.DAL.Interfaces;
+﻿using AndonLights.DAL.Repositories.Interfaces;
+using AndonLights.Services.Interfaces;
 
 namespace AndonLights.Services;
 

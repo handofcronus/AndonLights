@@ -1,7 +1,10 @@
-﻿
-using AndonLights.DAL.Interfaces;
+﻿using AndonLights.DAL;
+using AndonLights.DAL.Repositories.Interfaces;
 using AndonLights.DTOs;
 using AndonLights.Model;
+using AndonLights.Repositories;
+using AndonLights.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AndonLights.Services;
 
@@ -10,39 +13,25 @@ public class AndonLightService :IAndonLightService
 
     private IAndonLightRepo _andonLightRepository;
 
-    public AndonLightService(IAndonLightRepo andonLightRepository)
+    public AndonLightService(IAndonLightRepo andonLightRepository, AndonLightsDbContext andonLightsDbContext)
     {
         _andonLightRepository = andonLightRepository;
     }
 
     public AndonLightDTO GetLight(int id)
     {
-        //repo helyett mock
-        List<AndonLightDTO> lights = new List<AndonLightDTO>
-        {
-            new AndonLightDTO { ID = 1, Name = "test1", State = LightStates.Yellow },
-            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Blue }
-        };
-        return lights.Find(x => x.ID == id);
+        return modelToDTO(_andonLightRepository.GetLightById(id));
     }
 
     public IEnumerable<AndonLightDTO> GetLights()
     {
-
-        //repo helyett mock
-        List<AndonLightDTO> lights = new List<AndonLightDTO>
-        {
-            new AndonLightDTO { ID = 1, Name = "test1", State = LightStates.Yellow },
-            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Blue }
-        };
-        return lights;
+        return _andonLightRepository.GetLights().Select(modelToDTO).ToList();
     }
 
     public AndonLightDTO CreateLight(string name)
     {
-        //repo helyett mock
-        var light = new AndonLightDTO { Name = name, time = DateTime.Now, ID = 22, State = LightStates.Green };
-        return light;
+        var light = _andonLightRepository.Insert(name);
+        return modelToDTO(light);
     }
 
     
@@ -52,25 +41,19 @@ public class AndonLightService :IAndonLightService
         return _andonLightRepository.DeleteLight(id);
     }
 
-    public AndonLightDTO UpdateLight(AndonLightDTO andonLight)
+    public AndonLightDTO? UpdateLight(AndonLightDTO andonLight)
     {
-        //repo helyett mock
-        List<AndonLightDTO> lights = new List<AndonLightDTO>
+        var light = _andonLightRepository.UpdateLight(andonLight);
+        if (light is null)
         {
-            new AndonLightDTO { ID = 1, Name = "test1", State = LightStates.Yellow,time = DateTime.MinValue },
-            new AndonLightDTO { ID = 2, Name = "test2", State = LightStates.Blue,time = DateTime.MinValue }
-        };
-        var light = lights.Find(x => x.ID == andonLight.ID);
-        light.State = andonLight.State;
-        light.time = andonLight.time;
-        light.Name = andonLight.Name;
-        return light;
-        //return _andonLightRepository.UpdateLight(andonLight);
+            return null;
+        }
+        return modelToDTO(light);
     }
 
     private AndonLightDTO modelToDTO(AndonLight light)
     {
-        return new AndonLightDTO { Name = light.Name, ID = light.Id, State = light.CurrentState };
+        return new AndonLightDTO(light.Name) { ID = light.Id, State = light.CurrentState };
     }
 
     private AndonLight DTOToModel(AndonLightDTO andonLight)

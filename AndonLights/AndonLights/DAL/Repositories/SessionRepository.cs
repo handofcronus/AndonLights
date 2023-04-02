@@ -1,4 +1,4 @@
-﻿using AndonLights.DAL.Interfaces;
+﻿using AndonLights.DAL.Repositories.Interfaces;
 
 namespace AndonLights.Repositories;
 

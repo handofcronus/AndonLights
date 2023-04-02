@@ -1,7 +1,7 @@
 ﻿using AndonLights.DTOs;
 using AndonLights.Model;
 
-namespace AndonLights.DAL.Interfaces;
+namespace AndonLights.Services.Interfaces;
 
 public interface IAndonLightService
 {
@@ -11,5 +11,5 @@ public interface IAndonLightService
 
     public bool DeleteLight(int id);
 
-    public AndonLightDTO UpdateLight(AndonLightDTO andonLight);
+    public AndonLightDTO? UpdateLight(AndonLightDTO andonLight);
 }

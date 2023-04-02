@@ -1,13 +1,11 @@
 ﻿using AndonLights.DTOs;
 
-namespace AndonLights.DAL.Interfaces;
+namespace AndonLights.Services.Interfaces;
 
-public interface IStateRepo
+public interface IStateService
 {
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion);
     public StatsResponseDTO GetMonthlyStats(StatsQuestionDTO statsQuestion);
-
-
-
-
+    public void UpdateAllDailyStats();
+    public void UpdateAllMonthlyStats();
 }

@@ -4,6 +4,7 @@ namespace AndonLights.Model;
 
 public class Session
 {
+    public int StateId { get; set; }
     public int Id { get; set; }
     public double LenghtOfSessionInMinutes { get; set; }
     public string? ErrorMessage { get; set; }

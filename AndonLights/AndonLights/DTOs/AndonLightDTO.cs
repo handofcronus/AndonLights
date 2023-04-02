@@ -9,5 +9,10 @@ public class AndonLightDTO
     public LightStates State { get; set; }
     public string? ErrorMessage { get; set; }
 
-    public DateTime time { get; set; } 
+    public DateTime time { get; set; } = DateTime.Now;
+
+    public AndonLightDTO(string name)
+    {
+        Name = name;
+    }
 }

@@ -1,5 +1,6 @@
-﻿using AndonLights.DAL.Interfaces;
+﻿using AndonLights.DAL.Repositories.Interfaces;
 using AndonLights.DTOs;
+using AndonLights.Services.Interfaces;
 
 namespace AndonLights.Services;
 
@@ -14,11 +15,32 @@ public class StateService : IStateService
 
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion)
     {
-        throw new NotImplementedException();
+        var light = _stateRepo.GetDailyStats(statsQuestion);
+
+
+        return _stateRepo.GetDailyStats(statsQuestion);
     }
 
     public StatsResponseDTO GetMonthlyStats(StatsQuestionDTO statsQuestion)
     {
-        throw new NotImplementedException();
+        return _stateRepo.GetMonthlyStats(statsQuestion);
+    }
+
+    public void UpdateAllDailyStats()
+    {
+        var states = _stateRepo.GetAllStates();
+        foreach (var state in states) 
+        {
+            state.updateDailyStats();
+        }
+    }
+
+    public void UpdateAllMonthlyStats()
+    {
+        var states = _stateRepo.GetAllStates();
+        foreach (var state in states)
+        {
+            state.updateMonthlyStats();
+        }
     }
 }
