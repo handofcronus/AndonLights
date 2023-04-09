@@ -16,7 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHostedService<TimedHostedService>();
+builder.Services.AddHostedService<TimedHostedService>(); 
 
 builder.Services.AddScoped<IAndonLightRepo, AndonLightRepository>();
 builder.Services.AddScoped<IAndonLightService, AndonLightService>();
@@ -27,8 +27,9 @@ builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddScoped<ISessionRepo, SessionRepository>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 
+
 builder.Services.AddDbContext<AndonLightsDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("AndonLights")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("AndonLightsDocker")));
 
 
 var app = builder.Build();
@@ -46,31 +47,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-
-
 using (var serviceScope = app.Services.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<AndonLightsDbContext>();
     context.Database.EnsureCreated();
 }
-
-
-using var db = new AndonLightsDbContext();
-
-var light = new AndonLight("testLight2");
-db.Add(light);
-db.SaveChanges();
-light.SwitchedState(new AndonLightDTO("asd") { State = LightStates.Red });
-light.SwitchedState(new AndonLightDTO("asd") { State = LightStates.Green });
-light.SwitchedState(new AndonLightDTO("asd") { State = LightStates.Yellow });
-light.SwitchedState(new AndonLightDTO("asd") { State = LightStates.Red });
-
-
-
-
-db.SaveChanges();
-
-Console.ReadKey();
 
 app.Run();
 

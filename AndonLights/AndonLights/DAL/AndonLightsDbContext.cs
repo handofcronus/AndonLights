@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 //using Microsoft.Extensions.Configuration;
 using System.Configuration;
+using System.Runtime.CompilerServices;
+
 namespace AndonLights.DAL;
 
 
@@ -24,7 +26,7 @@ public class AndonLightsDbContext : DbContext
         if(!optionsBuilder.IsConfigured)
         {
             var builder = WebApplication.CreateBuilder();
-            optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("AndonLights"));
+            optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("AndonLightsDocker"));
         }
     }
 
@@ -39,15 +41,25 @@ public class AndonLightsDbContext : DbContext
         modelBuilder.Entity<State>().ToTable("States");
         modelBuilder.Entity<State>().HasKey(s => s.ID);
         modelBuilder.Entity<State>().HasMany(s => s.ClosedSessions).WithOne();
-        modelBuilder.Entity<State>().HasMany(s => s.DailyStats).WithOne();
-        modelBuilder.Entity<State>().HasMany(s => s.MonthlyStats).WithOne();
+        modelBuilder.Entity<State>().HasMany(s => s.DailyStats)
+            .WithOne()
+            .HasForeignKey(s => s.StateId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<State>().HasMany(s => s.MonthlyStats)
+            .WithOne()
+            .HasForeignKey(s => s.StateId)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<State>().Property(a => a.StateColour).HasConversion<string>();
 
 
 
         modelBuilder.Entity<AndonLight>().ToTable("AndonLights");
         modelBuilder.Entity<AndonLight>().HasKey(a => a.Id);
-        modelBuilder.Entity<AndonLight>().HasMany(a => a.States).WithOne().HasForeignKey(s => s.LightID).IsRequired();
+        modelBuilder.Entity<AndonLight>().HasMany(a => a.States)
+            .WithOne()
+            .HasForeignKey(s => s.LightID)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<AndonLight>().Property(a => a.CurrentState).HasConversion<string>();
 
 

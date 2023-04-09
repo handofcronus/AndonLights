@@ -3,6 +3,7 @@
 public class StatsBase
 {
     public int Id { get; set; }
+    public int StateId { get; set; }
     public int NumberOfEntries { get; set; }
     public double MinutesSpentInState { get; set; }
     public DateTime DateOfStats { get; set; }

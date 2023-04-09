@@ -4,6 +4,7 @@ using AndonLights.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AndonLights.Migrations
 {
     [DbContext(typeof(AndonLightsDbContext))]
-    partial class AndonLightsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230409143040_cascade")]
+    partial class cascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,12 +66,12 @@ namespace AndonLights.Migrations
                     b.Property<int>("NumberOfEntries")
                         .HasColumnType("int");
 
-                    b.Property<int>("StateId")
+                    b.Property<int?>("StateID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StateId");
+                    b.HasIndex("StateID");
 
                     b.ToTable("DailyStateStats", (string)null);
                 });
@@ -90,12 +93,12 @@ namespace AndonLights.Migrations
                     b.Property<int>("NumberOfEntries")
                         .HasColumnType("int");
 
-                    b.Property<int>("StateId")
+                    b.Property<int?>("StateID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StateId");
+                    b.HasIndex("StateID");
 
                     b.ToTable("MonthlyStateStats", (string)null);
                 });
@@ -157,18 +160,16 @@ namespace AndonLights.Migrations
                 {
                     b.HasOne("AndonLights.Model.State", null)
                         .WithMany("DailyStats")
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StateID")
+                        .OnDelete(DeleteBehavior.ClientCascade);
                 });
 
             modelBuilder.Entity("AndonLights.Model.MonthlyStateStats", b =>
                 {
                     b.HasOne("AndonLights.Model.State", null)
                         .WithMany("MonthlyStats")
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StateID")
+                        .OnDelete(DeleteBehavior.ClientCascade);
                 });
 
             modelBuilder.Entity("AndonLights.Model.Session", b =>
@@ -185,7 +186,7 @@ namespace AndonLights.Migrations
                     b.HasOne("AndonLights.Model.AndonLight", null)
                         .WithMany("States")
                         .HasForeignKey("LightID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 
