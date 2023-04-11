@@ -9,6 +9,7 @@ public interface IStateRepo
     public StatsResponseDTO GetMonthlyStats(StatsQuestionDTO statsQuestion);
 
     public List<State> GetAllStates();
+    public void SaveDb();
 
 
 

@@ -19,7 +19,7 @@ public class StateRepository : IStateRepo
 
     public List<State> GetAllStates()
     {
-        return _dbContext.States.ToList();
+        return _dbContext.States.Include(s=>s.ClosedSessions).Include(s=>s.DailyStats).Include(s=>s.MonthlyStats).ToList();
     }
 
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion)
@@ -33,4 +33,9 @@ public class StateRepository : IStateRepo
         var light = _lightRepository.GetLightById(statsQuestion.id);
         return light.GetMonthlyStatsFromStates(statsQuestion);
     }
+    public void SaveDb()
+    {
+        _dbContext.SaveChanges();
+    }
+
 }

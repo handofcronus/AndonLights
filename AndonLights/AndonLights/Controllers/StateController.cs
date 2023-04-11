@@ -11,7 +11,7 @@ public class StateController : ControllerBase
 {
     private IStateService _stateService;
     private ILogger _logger;
-    public StateController(ILogger logger,IStateService service)    
+    public StateController(ILogger<StateController> logger,IStateService service)    
     { 
         _stateService = service;
         _logger = logger;
@@ -19,7 +19,7 @@ public class StateController : ControllerBase
 
 
     [HttpGet("/daily")]
-    public ActionResult<StatsResponseDTO> GetDailyStats([FromBody] StatsQuestionDTO statsQuestion)
+    public ActionResult<StatsResponseDTO> GetDailyStats([FromQuery] StatsQuestionDTO statsQuestion)
     {
         try
         {
@@ -34,7 +34,7 @@ public class StateController : ControllerBase
     }
 
     [HttpGet("/monthly")]
-    public ActionResult<StatsResponseDTO> GetMonthlyStats([FromBody] StatsQuestionDTO statsQuestion)
+    public ActionResult<StatsResponseDTO> GetMonthlyStats([FromQuery] StatsQuestionDTO statsQuestion)
     {
         try
         {

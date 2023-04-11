@@ -15,9 +15,6 @@ public class StateService : IStateService
 
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion)
     {
-        var light = _stateRepo.GetDailyStats(statsQuestion);
-
-
         return _stateRepo.GetDailyStats(statsQuestion);
     }
 
@@ -33,6 +30,7 @@ public class StateService : IStateService
         {
             state.updateDailyStats();
         }
+        _stateRepo.SaveDb();
     }
 
     public void UpdateAllMonthlyStats()
@@ -42,5 +40,6 @@ public class StateService : IStateService
         {
             state.updateMonthlyStats();
         }
+        _stateRepo.SaveDb();
     }
 }

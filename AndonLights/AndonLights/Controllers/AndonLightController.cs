@@ -79,7 +79,7 @@ public class AndonLightController : ControllerBase
         try
         {
             var res = _lightService.DeleteLight(id);
-            return res == true ? NotFound() : Ok();
+            return res == true ? Ok() : NotFound();
         }
         catch (Exception e)
         {

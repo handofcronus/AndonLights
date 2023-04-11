@@ -30,7 +30,10 @@ public class AndonLight
             new State(LightStates.Yellow),
             new State(LightStates.Red),
         };
-
+    }
+    protected AndonLight() 
+    {
+        States = new List<State>();
     }
 
     public void SwitchedState(AndonLightDTO andonLight)

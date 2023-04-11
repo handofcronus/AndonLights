@@ -1,5 +1,6 @@
 ﻿using AndonLights.Services.Interfaces;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 public class TimedHostedService : IHostedService, IDisposable
 {
@@ -7,46 +8,74 @@ public class TimedHostedService : IHostedService, IDisposable
     private readonly IServiceProvider _serviceProvider;
     private Timer? _dailyTimer = null;
     private Timer? _monthlyTimer = null;
-
-    private Timer? _testTimer = null;
+    private DateTime _dayOfLastDailyUpdate;
+    private DateTime _monthOfLastMonthlyUpdate;
 
     public TimedHostedService(ILogger<TimedHostedService> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
+        _dayOfLastDailyUpdate = DateTime.MinValue;
+        _monthOfLastMonthlyUpdate = DateTime.MinValue;
     }
 
     public Task StartAsync(CancellationToken stoppingToken)
     {
-        _testTimer = new Timer(DoWork,null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-        _dailyTimer = new Timer(DoDailyWork, null, TimeSpan.Zero,TimeSpan.FromDays(1));
-        _monthlyTimer = new Timer(DoMonthlyWork, null, TimeSpan.Zero, TimeSpan.FromDays(30));
+        _dailyTimer = new Timer(DoDailyWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
+        _monthlyTimer = new Timer(DoMonthlyWork, null, TimeSpan.Zero, TimeSpan.FromDays(1));
         _logger.LogInformation("Timed Hosted Service running.");
         return Task.CompletedTask;
     }
 
-    private void DoWork(object? state)
-    {
-        Console.WriteLine(DateTime.Now);
-    }
-
     private void DoMonthlyWork(object? state)
     {
-        using (var scope = _serviceProvider.CreateScope())
+        var today = DateTime.Today;
+        bool isUpdateNeeded = false;
+        if (today.Year==_monthOfLastMonthlyUpdate.Year)
         {
+            if(today.Month>_monthOfLastMonthlyUpdate.Month)
+            {
+                isUpdateNeeded = true;
+            }
+        }
+        if(today.Year>_monthOfLastMonthlyUpdate.Year)
+        {
+            isUpdateNeeded= true;
+        }
+        if(isUpdateNeeded)
+        {
+            using var scope = _serviceProvider.CreateScope();
             var stateService = scope.ServiceProvider.GetService<IStateService>();
-            stateService.UpdateAllMonthlyStats();
-            _logger.LogInformation($"Timed Hosted Service has updated {DateTime.Today}-s monthly statistics.");
-        } 
+            if(IsNotNull(stateService))
+            {
+                stateService.UpdateAllMonthlyStats();
+                _monthOfLastMonthlyUpdate = today;
+                _logger.LogInformation($"Timed Hosted Service has updated {today}-s monthly statistics.");
+            }
+            else
+            {
+                _logger.LogInformation($"StateService is null in Timed Hosted Service,DoMonthlyWork ");
+            }
+        }
     }
 
     private void DoDailyWork(object? state)
     {
-        using (var scope = _serviceProvider.CreateScope())
+        var today = DateTime.Today;
+        if (DateTime.Compare(_dayOfLastDailyUpdate, today) < 0)
         {
+            using var scope = _serviceProvider.CreateScope();
             var stateService = scope.ServiceProvider.GetService<IStateService>();
-            stateService.UpdateAllDailyStats();
-            _logger.LogInformation($"Timed Hosted Service has updated {DateTime.Today}-s daily statistics.");
+            if(IsNotNull(stateService))
+            {
+                stateService.UpdateAllDailyStats();
+                _dayOfLastDailyUpdate=today;
+                _logger.LogInformation($"Timed Hosted Service has updated {today}-s daily statistics.");
+            }
+            else
+            {
+                _logger.LogInformation($"StateService is null in Timed Hosted Service,DoDailyWork ");
+            }
         }
     }
 
@@ -62,5 +91,10 @@ public class TimedHostedService : IHostedService, IDisposable
     {
         _dailyTimer?.Dispose();
         _monthlyTimer?.Dispose();
+    }
+
+    private bool IsNotNull([NotNullWhen(true)]object? obj)
+    {
+        return obj!= null ? true: false;
     }
 }

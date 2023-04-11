@@ -8,7 +8,6 @@ public class State
     public int ID { get; set; }
     public List<Session> ClosedSessions { get; } = new List<Session>();
 
-    // ez kerüljön-e a db-be
     private Session _currentSession;
     public LightStates StateColour { get; set; }
     public List<MonthlyStateStats> MonthlyStats { get; }
@@ -24,7 +23,6 @@ public class State
 
     }
 
-    //tesztadatok
     public void updateDailyStats()
     {
         DailyStateStats todaysStats = GetADailyStatOrDefault(DateTime.Today);
@@ -34,8 +32,9 @@ public class State
         {
             DailyStats.Add(todaysStats);
         }
+        Console.WriteLine("updateDailyStats");
     }
-    //tesztadatok
+
     public void updateMonthlyStats()
     {
         MonthlyStateStats monthlyStateStats = GetAMonthlyStatsOrDefault(DateTime.Today);

@@ -2,6 +2,7 @@
 using AndonLights.DAL.Repositories.Interfaces;
 using AndonLights.DTOs;
 using AndonLights.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace AndonLights.Repositories;
 
@@ -29,7 +30,11 @@ public class AndonLightRepository : IAndonLightRepo
 
     public AndonLight GetLightById(int lightId)
     {
-        return _dbContext.AndonLights.Single(x => x.Id == lightId);
+        return _dbContext.AndonLights
+            .Include(a => a.States).ThenInclude(s => s.DailyStats)
+            .Include(a => a.States).ThenInclude(s => s.MonthlyStats)
+            .Include(a => a.States).ThenInclude(s => s.ClosedSessions)
+            .Single(x => x.Id == lightId);
     }
 
     public IEnumerable<AndonLight> GetLights()
