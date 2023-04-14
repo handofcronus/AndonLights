@@ -26,7 +26,19 @@ public class AndonLightsDbContext : DbContext
         if(!optionsBuilder.IsConfigured)
         {
             var builder = WebApplication.CreateBuilder();
-            optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("AndonLightsDocker"));
+            var connHost = Environment.GetEnvironmentVariable("SQL:HOST");
+            var connUser = Environment.GetEnvironmentVariable("SQL:USER");
+            var connPsw = Environment.GetEnvironmentVariable("SQL:PW");
+            var connString = "";
+            if (connHost is null || connUser is null || connPsw is null)
+            {
+                connString = builder.Configuration.GetConnectionString("AndonLights");
+            }
+            else
+            {
+                connString = $"Server={connHost};Database = AndonLightsDB;User Id ={connUser};Password={connPsw};MultipleActiveResultSets=true; TrustServerCertificate=true";
+            }
+            optionsBuilder.UseSqlServer(connString);
         }
     }
 
@@ -61,6 +73,7 @@ public class AndonLightsDbContext : DbContext
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<AndonLight>().Property(a => a.CurrentState).HasConversion<string>();
+        modelBuilder.Entity<AndonLight>().Property(a => a.Name).HasMaxLength(150);
 
 
         modelBuilder.Entity<DailyStateStats>().ToTable("DailyStateStats");

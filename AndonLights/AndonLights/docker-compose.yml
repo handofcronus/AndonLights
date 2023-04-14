@@ -1,20 +1,29 @@
-version: "3.9"  
+version:  '3.9'
+
 services:
   andon:
-    image: andon
+    image: git.sztaki.hu:5050/zahoranl/andon-onlab:latest
     container_name: andon_be
     ports:
-      - "8080:80"
+      -  "80:80"
     depends_on:
-      - sql
-    
+      -  sql
+    environment:
+      -  SQL__HOST=sql_server2022
+      -  SQL__PORT=1433
+      -  SQL__USER=SA
+      -  SQL__PW=A&VeryComplex123Password
+      
   sql:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     container_name: sql_server2022
-    ports: 
-      - "1433:1433" 
+    volumes:
+      -  sqlvolume:/var/opt/mssql
+    ports:
+      -  "1433:1433"
     environment:
-      - ACCEPT_EULA=y
-      - SA_PASSWORD=A&VeryComplex123Password
-    
+      -  ACCEPT_EULA=y
+      -  SA_PASSWORD=A&VeryComplex123Password
+volumes:
+  sqlvolume:
       

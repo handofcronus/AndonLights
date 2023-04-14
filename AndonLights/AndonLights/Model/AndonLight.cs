@@ -1,7 +1,5 @@
 ﻿using AndonLights.DTOs;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
-using System.Collections;
 
 namespace AndonLights.Model;
 

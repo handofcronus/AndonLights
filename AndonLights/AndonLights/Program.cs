@@ -24,12 +24,23 @@ builder.Services.AddScoped<IAndonLightService, AndonLightService>();
 builder.Services.AddScoped<IStateRepo, StateRepository>();
 builder.Services.AddScoped<IStateService, StateService>();
 
-builder.Services.AddScoped<ISessionRepo, SessionRepository>();
-builder.Services.AddScoped<ISessionService, SessionService>();
 
 
-builder.Services.AddDbContext<AndonLightsDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("AndonLightsDocker")));
+
+var connHost = Environment.GetEnvironmentVariable("SQL:HOST");
+var connUser = Environment.GetEnvironmentVariable("SQL:USER");
+var connPsw = Environment.GetEnvironmentVariable("SQL:PW");
+var connString = "";
+if(connHost is null || connUser is null || connPsw is null )
+{
+    connString = builder.Configuration.GetConnectionString("AndonLights");
+}
+else
+{
+    connString = $"Server={connHost};Database = AndonLightsDB;User Id ={connUser};Password={connPsw};MultipleActiveResultSets=true; TrustServerCertificate=true";
+}
+
+builder.Services.AddDbContext<AndonLightsDbContext>(options => options.UseSqlServer(connString));
 
 
 var app = builder.Build();
