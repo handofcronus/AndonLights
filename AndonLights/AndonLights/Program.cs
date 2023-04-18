@@ -27,24 +27,26 @@ builder.Services.AddScoped<IStateService, StateService>();
 
 
 
-var connHost = Environment.GetEnvironmentVariable("SQL:HOST");
-var connUser = Environment.GetEnvironmentVariable("SQL:USER");
-var connPsw = Environment.GetEnvironmentVariable("SQL:PW");
+var connHost = Environment.GetEnvironmentVariable("SQL__HOST");
+var connUser = Environment.GetEnvironmentVariable("SQL__USER");
+var connPsw = Environment.GetEnvironmentVariable("SQL__PW");
+var connPort = Environment.GetEnvironmentVariable("SQL__PORT");
+var connDBname = Environment.GetEnvironmentVariable("SQL__DB");
 var connString = "";
-if(connHost is null || connUser is null || connPsw is null )
+if (connHost is null || connUser is null || connPsw is null || connPort is null || connDBname is null)
 {
     connString = builder.Configuration.GetConnectionString("AndonLights");
 }
 else
 {
-    connString = $"Server={connHost};Database = AndonLightsDB;User Id ={connUser};Password={connPsw};MultipleActiveResultSets=true; TrustServerCertificate=true";
+    connString = $"Server={connHost},{connPort};Database = {connDBname};User Id ={connUser};Password={connPsw};MultipleActiveResultSets=true; TrustServerCertificate=true";
 }
 
 builder.Services.AddDbContext<AndonLightsDbContext>(options => options.UseSqlServer(connString));
 
 
 var app = builder.Build();
-
+app.Logger.LogInformation(connString);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
