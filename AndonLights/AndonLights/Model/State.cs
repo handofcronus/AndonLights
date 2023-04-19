@@ -23,7 +23,7 @@ public class State
 
     }
 
-    public void updateDailyStats()
+    public void UpdateDailyStats()
     {
         DailyStateStats todaysStats = GetADailyStatOrDefault(DateTime.Today);
         var sessionsThisDay = GetSessionsFromADay(DateTime.Now, ClosedSessions);
@@ -32,10 +32,9 @@ public class State
         {
             DailyStats.Add(todaysStats);
         }
-        Console.WriteLine("updateDailyStats");
     }
 
-    public void updateMonthlyStats()
+    public void UpdateMonthlyStats()
     {
         MonthlyStateStats monthlyStateStats = GetAMonthlyStatsOrDefault(DateTime.Today);
         var sessionsThisMonth = GetSessionsFromAMonth(DateTime.Now, ClosedSessions);
@@ -56,12 +55,12 @@ public class State
     }
 
 
-    public void activateState(DateTime timeOfSwitch)
+    public void ActivateState(DateTime timeOfSwitch)
     {
         _currentSession = new Session(timeOfSwitch);
     }
 
-    public void closeState(DateTime timeOfSwitch)
+    public void CloseState(DateTime timeOfSwitch)
     {
         _currentSession.closeSession(timeOfSwitch);
         ClosedSessions.Add(_currentSession);
