@@ -3,6 +3,7 @@ using AndonLights.DAL.Repositories.Interfaces;
 using AndonLights.DTOs;
 using AndonLights.Model;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
 namespace AndonLights.Repositories;
 
@@ -45,7 +46,10 @@ public class AndonLightRepository : IAndonLightRepo
 
     public AndonLight Insert(string name)
     {
-        AndonLight light = new AndonLight(name) {DateOfCreation = DateTime.Now,CurrentState = LightStates.Green };
+        AndonLight light = new AndonLight(name) 
+        {
+            DateOfCreation = new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc),
+            CurrentState = LightStates.Green };
         _dbContext.AndonLights.Add(light);
         _dbContext.SaveChanges();
         return light;

@@ -6,7 +6,7 @@ using AndonLights.Repositories;
 using AndonLights.Services;
 using AndonLights.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,25 +24,28 @@ builder.Services.AddScoped<IAndonLightService, AndonLightService>();
 builder.Services.AddScoped<IStateRepo, StateRepository>();
 builder.Services.AddScoped<IStateService, StateService>();
 
-
-
-
-var connHost = Environment.GetEnvironmentVariable("SQL__HOST");
-var connUser = Environment.GetEnvironmentVariable("SQL__USER");
-var connPsw = Environment.GetEnvironmentVariable("SQL__PW");
-var connPort = Environment.GetEnvironmentVariable("SQL__PORT");
-var connDBname = Environment.GetEnvironmentVariable("SQL__DB");
+var connHost = Environment.GetEnvironmentVariable("PGQL__HOST");
+var connUser = Environment.GetEnvironmentVariable("PGQL__USER");
+var connPsw = Environment.GetEnvironmentVariable("PGQL__PW");
+var connPort = Environment.GetEnvironmentVariable("PGQL__PORT");
+var connDBname = Environment.GetEnvironmentVariable("PGQL__DB");
 var connString = "";
 if (connHost is null || connUser is null || connPsw is null || connPort is null || connDBname is null)
 {
-    connString = builder.Configuration.GetConnectionString("AndonLights");
+    connString = builder.Configuration.GetConnectionString("AndonLightsPostgres");
 }
 else
 {
-    connString = $"Server={connHost},{connPort};Database = {connDBname};User Id ={connUser};Password={connPsw};MultipleActiveResultSets=true; TrustServerCertificate=true";
+    NpgsqlConnectionStringBuilder connStringBuilder = new NpgsqlConnectionStringBuilder();
+    connStringBuilder.Host = connHost;
+    connStringBuilder.Port = Int32.Parse(connPort);
+    connStringBuilder.Database = connDBname;
+    connStringBuilder.Username = connUser;
+    connStringBuilder.Password = connPsw;
+    connString = connStringBuilder.ToString();
 }
 
-builder.Services.AddDbContext<AndonLightsDbContext>(options => options.UseSqlServer(connString));
+builder.Services.AddDbContext<AndonLightsDbContext>(options => options.UseNpgsql(connString, o=> o.UseNodaTime()));
 
 
 var app = builder.Build();
@@ -65,6 +68,10 @@ using (var serviceScope = app.Services.CreateScope())
     var context = serviceScope.ServiceProvider.GetRequiredService<AndonLightsDbContext>();
     context.Database.EnsureCreated();
 }
+
+
+
+
 
 app.Run();
 

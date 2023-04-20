@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿
+using NodaTime;
 
 namespace AndonLights.Model;
 
@@ -18,15 +19,15 @@ public class State
         ClosedSessions = new List<Session>();
         MonthlyStats = new List<MonthlyStateStats>();
         DailyStats = new List<DailyStateStats>();
-        _currentSession = new Session(DateTime.Now);
+        _currentSession = new Session(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc));
         this.StateColour = StateColour;
 
     }
 
     public void UpdateDailyStats()
     {
-        DailyStateStats todaysStats = GetADailyStatOrDefault(DateTime.Today);
-        var sessionsThisDay = GetSessionsFromADay(DateTime.Now, ClosedSessions);
+        DailyStateStats todaysStats = GetADailyStatOrDefault(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc));
+        var sessionsThisDay = GetSessionsFromADay(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc), ClosedSessions);
         todaysStats.Calc(sessionsThisDay);
         if (!DailyStats.Contains(todaysStats))
         {
@@ -36,8 +37,8 @@ public class State
 
     public void UpdateMonthlyStats()
     {
-        MonthlyStateStats monthlyStateStats = GetAMonthlyStatsOrDefault(DateTime.Today);
-        var sessionsThisMonth = GetSessionsFromAMonth(DateTime.Now, ClosedSessions);
+        MonthlyStateStats monthlyStateStats = GetAMonthlyStatsOrDefault(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc));
+        var sessionsThisMonth = GetSessionsFromAMonth(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc), ClosedSessions);
         monthlyStateStats.Calc(sessionsThisMonth);
         if(!MonthlyStats.Contains(monthlyStateStats))
         {
@@ -45,37 +46,37 @@ public class State
         }
     }
 
-    public DailyStateStats? GetDailyStats(DateTime time)
+    public DailyStateStats? GetDailyStats(ZonedDateTime time)
     {
         return DailyStats.Find(x => x.DateOfStats.Date == time.Date);
     }
-    public MonthlyStateStats? GetMonthlyStats(DateTime time)
+    public MonthlyStateStats? GetMonthlyStats(ZonedDateTime time)
     {
-        return MonthlyStats.Find(x => x.DateOfStats.Date == time.Date);
+        return MonthlyStats.Find(x => x.DateOfStats.Date.Year == time.Date.Year && x.DateOfStats.Month == time.Date.Month);
     }
 
 
-    public void ActivateState(DateTime timeOfSwitch)
+    public void ActivateState(ZonedDateTime timeOfSwitch)
     {
         _currentSession = new Session(timeOfSwitch);
     }
 
-    public void CloseState(DateTime timeOfSwitch)
+    public void CloseState(ZonedDateTime timeOfSwitch)
     {
         _currentSession.closeSession(timeOfSwitch);
         ClosedSessions.Add(_currentSession);
     }
 
-    private List<Session> GetSessionsFromADay(DateTime date, List<Session> closedSessions)
+    private List<Session> GetSessionsFromADay(ZonedDateTime date, List<Session> closedSessions)
     {
         return closedSessions.FindAll(x => x.InTime.Date == date.Date);
     }
-    private List<Session> GetSessionsFromAMonth(DateTime date, List<Session> closedSessions)
+    private List<Session> GetSessionsFromAMonth(ZonedDateTime date, List<Session> closedSessions)
     {
         return closedSessions.FindAll(x => x.InTime.Date.Year == date.Date.Year && x.InTime.Date.Month == date.Date.Month);
     }
 
-    private DailyStateStats GetADailyStatOrDefault(DateTime dateTime)
+    private DailyStateStats GetADailyStatOrDefault(ZonedDateTime dateTime)
     {
         foreach (var dailyStat in DailyStats)
         {
@@ -86,7 +87,7 @@ public class State
         }
         return new DailyStateStats();
     }
-    private MonthlyStateStats GetAMonthlyStatsOrDefault(DateTime dateTime)
+    private MonthlyStateStats GetAMonthlyStatsOrDefault(ZonedDateTime dateTime)
     {
         foreach (var monthlyStat in MonthlyStats)
         {

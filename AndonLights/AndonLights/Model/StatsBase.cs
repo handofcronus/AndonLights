@@ -1,18 +1,20 @@
-﻿namespace AndonLights.Model;
+﻿using NodaTime;
 
-public class StatsBase
+namespace AndonLights.Model;
+
+public abstract class StatsBase
 {
     public int Id { get; set; }
     public int StateId { get; set; }
     public int NumberOfEntries { get; set; }
     public double MinutesSpentInState { get; set; }
-    public DateTime DateOfStats { get; set; }
+    public ZonedDateTime DateOfStats { get; set; }
 
     protected StatsBase() 
     {
         NumberOfEntries = 0;
         MinutesSpentInState = 0.0;
-        DateOfStats = DateTime.Now;
+        DateOfStats = new ZonedDateTime( SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc);
     }
     public void Calc(List<Session> sessionsThisDay)
     {

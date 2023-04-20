@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using NodaTime;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AndonLights.Model;
 
@@ -8,27 +9,24 @@ public class Session
     public int Id { get; set; }
     public double LenghtOfSessionInMinutes { get; set; }
     public string? ErrorMessage { get; set; }
-    public required DateTime InTime { get; set; }
-    public DateTime OutTime { get; set; }
+    public required ZonedDateTime InTime { get; set; }
+    public ZonedDateTime OutTime { get; set; }
 
     [SetsRequiredMembers]
-    public Session(DateTime inTime)
+    public Session(ZonedDateTime inTime)
     {
         InTime = inTime;
+        
     }
     public Session()
     {
-
+        
     }
 
-    public void closeSession(DateTime outTime)
+    public void closeSession(ZonedDateTime outTime)
     {
         OutTime = outTime;
-        TimeSpan? ts = OutTime - InTime;
-        if(ts.HasValue)
-        {
-            LenghtOfSessionInMinutes = ts.Value.TotalMinutes;
-        }
-        
+        Duration duration = OutTime - InTime;
+        LenghtOfSessionInMinutes = duration.TotalMinutes;
     }
 }

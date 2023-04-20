@@ -1,5 +1,6 @@
 ﻿using AndonLights.Model;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 //using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using System.Runtime.CompilerServices;
@@ -26,11 +27,11 @@ public class AndonLightsDbContext : DbContext
         if(!optionsBuilder.IsConfigured)
         {
             var builder = WebApplication.CreateBuilder();
-            var connHost = Environment.GetEnvironmentVariable("SQL__HOST");
-            var connUser = Environment.GetEnvironmentVariable("SQL__USER");
-            var connPsw = Environment.GetEnvironmentVariable("SQL__PW");
-            var connPort = Environment.GetEnvironmentVariable("SQL__PORT");
-            var connDBname = Environment.GetEnvironmentVariable("SQL__DB");
+            var connHost = Environment.GetEnvironmentVariable("PGQL__HOST");
+            var connUser = Environment.GetEnvironmentVariable("PGQL__USER");
+            var connPsw = Environment.GetEnvironmentVariable("PGQL__PW");
+            var connPort = Environment.GetEnvironmentVariable("PGQL__PORT");
+            var connDBname = Environment.GetEnvironmentVariable("PGQL__DB");
             var connString = "";
             if (connHost is null || connUser is null || connPsw is null || connPort is null || connDBname is null)
             {
@@ -38,10 +39,17 @@ public class AndonLightsDbContext : DbContext
             }
             else
             {
-                connString = $"Server={connHost},{connPort};Database = {connDBname};User Id ={connUser};Password={connPsw};MultipleActiveResultSets=true; TrustServerCertificate=true";
+                NpgsqlConnectionStringBuilder connStringBuilder = new NpgsqlConnectionStringBuilder();
+                connStringBuilder.Host = connHost;
+                connStringBuilder.Port = Int32.Parse(connPort);
+                connStringBuilder.Database = connDBname;
+                connStringBuilder.Username = connUser;
+                connStringBuilder.Password = connPsw;
+                connString = connStringBuilder.ToString();
             }
-            optionsBuilder.UseSqlServer(connString);
+            optionsBuilder.UseNpgsql(connString, o => o.UseNodaTime());
         }
+        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

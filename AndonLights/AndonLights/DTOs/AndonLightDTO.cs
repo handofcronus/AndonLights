@@ -1,4 +1,5 @@
 ﻿using AndonLights.Model;
+using NodaTime;
 
 namespace AndonLights.DTOs;
 
@@ -9,7 +10,7 @@ public class AndonLightDTO
     public LightStates State { get; set; }
     public string? ErrorMessage { get; set; }
 
-    public DateTime time { get; set; } = DateTime.Now;
+    public ZonedDateTime time { get; set; } = new ZonedDateTime( SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc);
 
     public AndonLightDTO(string name)
     {

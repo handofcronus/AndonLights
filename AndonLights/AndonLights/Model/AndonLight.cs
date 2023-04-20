@@ -1,4 +1,5 @@
 ﻿using AndonLights.DTOs;
+using NodaTime;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AndonLights.Model;
@@ -10,7 +11,7 @@ public class AndonLight
 
     public string Name { get; set; }
 
-    public required DateTime DateOfCreation { get; init; }
+    public required ZonedDateTime DateOfCreation { get; init; }
 
     public List<State> States { get;set; }
 
@@ -21,7 +22,7 @@ public class AndonLight
     {
         this.Name = Name;
         CurrentState = LightStates.Green;
-        DateOfCreation = DateTime.Now;
+        DateOfCreation =new ZonedDateTime( SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc);
         States = new List<State>
         {
             new State(LightStates.Green),
