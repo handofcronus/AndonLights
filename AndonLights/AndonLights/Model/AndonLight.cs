@@ -1,7 +1,6 @@
 ﻿using AndonLights.DTOs;
+using NodaTime;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
-using System.Collections;
 
 namespace AndonLights.Model;
 
@@ -12,7 +11,7 @@ public class AndonLight
 
     public string Name { get; set; }
 
-    public required DateTime DateOfCreation { get; init; }
+    public required ZonedDateTime DateOfCreation { get; init; }
 
     public List<State> States { get;set; }
 
@@ -23,7 +22,7 @@ public class AndonLight
     {
         this.Name = Name;
         CurrentState = LightStates.Green;
-        DateOfCreation = DateTime.Now;
+        DateOfCreation =new ZonedDateTime( SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc);
         States = new List<State>
         {
             new State(LightStates.Green),
@@ -38,33 +37,41 @@ public class AndonLight
 
     public void SwitchedState(AndonLightDTO andonLight)
     {
-        switch (this.CurrentState)
+        try
         {
-            case LightStates.Green:
-                getStateWithColour(LightStates.Green).closeState(andonLight.time);
-                break;
-            case LightStates.Yellow:
-                getStateWithColour(LightStates.Yellow).closeState(andonLight.time);
-                break;
-            case LightStates.Red:
-                getStateWithColour(LightStates.Red).closeState(andonLight.time);
-                break;
+            switch (this.CurrentState)
+            {
+                case LightStates.Green:
+                    GetStateWithColour(LightStates.Green).CloseState(andonLight.time);
+                    break;
+                case LightStates.Yellow:
+                    GetStateWithColour(LightStates.Yellow).CloseState(andonLight.time);
+                    break;
+                case LightStates.Red:
+                    GetStateWithColour(LightStates.Red).CloseState(andonLight.time);
+                    break;
+            }
+            switch (andonLight.State)
+            {
+                case LightStates.Green:
+                    GetStateWithColour(LightStates.Green).ActivateState(andonLight.time);
+                    CurrentState = LightStates.Green;
+                    break;
+                case LightStates.Yellow:
+                    GetStateWithColour(LightStates.Yellow).ActivateState(andonLight.time);
+                    CurrentState = LightStates.Yellow;
+                    break;
+                case LightStates.Red:
+                    GetStateWithColour(LightStates.Red).ActivateState(andonLight.time);
+                    CurrentState = LightStates.Red;
+                    break;
+            }
         }
-        switch(andonLight.State)
+        catch(InvalidOperationException)
         {
-            case LightStates.Green:
-                getStateWithColour(LightStates.Green).activateState(andonLight.time);
-                CurrentState = LightStates.Green;
-                break;
-            case LightStates.Yellow:
-                getStateWithColour(LightStates.Yellow).activateState(andonLight.time);
-                CurrentState = LightStates.Yellow;
-                break;
-            case LightStates.Red:
-                getStateWithColour(LightStates.Red).activateState(andonLight.time);
-                CurrentState = LightStates.Red;
-                break;
+            throw new InvalidOperationException();
         }
+        
     }
 
     public StatsResponseDTO GetDailyStatsFromStates(StatsQuestionDTO questionDTO)
@@ -79,17 +86,17 @@ public class AndonLight
             , States[1].GetMonthlyStats(questionDTO.Time)
             , States[2].GetMonthlyStats(questionDTO.Time));
     }
-    private State getStateWithColour(LightStates lightStates) 
+    private State GetStateWithColour(LightStates lightState) 
     {
-        if(lightStates == LightStates.Green)
+        foreach(var state in States)
         {
-            return States[0];
+            if(state.StateColour==lightState)
+            {
+                return state;
+            }
         }
-        if(lightStates == LightStates.Yellow)
-        { 
-            return States[1];
-        }
-        return States[2];
+        throw new InvalidOperationException();
+
     }
 
 }

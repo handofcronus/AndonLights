@@ -3,17 +3,19 @@ using AndonLights.DAL.Repositories.Interfaces;
 using AndonLights.DTOs;
 using AndonLights.Model;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
 namespace AndonLights.Repositories;
 
 public class AndonLightRepository : IAndonLightRepo
 {
     private AndonLightsDbContext _dbContext;
+    private ILogger<AndonLightRepository> _logger;
 
-
-    public AndonLightRepository(AndonLightsDbContext dbContext)
+    public AndonLightRepository(AndonLightsDbContext dbContext, ILogger<AndonLightRepository> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     public bool DeleteLight(int id)
@@ -44,7 +46,10 @@ public class AndonLightRepository : IAndonLightRepo
 
     public AndonLight Insert(string name)
     {
-        AndonLight light = new AndonLight(name) {DateOfCreation = DateTime.Now,CurrentState = LightStates.Green };
+        AndonLight light = new AndonLight(name) 
+        {
+            DateOfCreation = new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc),
+            CurrentState = LightStates.Green };
         _dbContext.AndonLights.Add(light);
         _dbContext.SaveChanges();
         return light;
@@ -57,7 +62,16 @@ public class AndonLightRepository : IAndonLightRepo
         {
             return null;
         }
-        light.SwitchedState(andonLightDTO);
+        try
+        {
+            light.SwitchedState(andonLightDTO);
+        }
+        catch(InvalidOperationException)
+        {
+            _logger.LogInformation($"Light with {light.Id} id is not in a valid state.");
+            throw new InvalidOperationException();
+        }
+        
         _dbContext.SaveChanges();
         return light;
 

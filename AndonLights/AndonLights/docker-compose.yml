@@ -1,20 +1,30 @@
-version: "3.9"  
+version:  '3.9'
+
 services:
   andon:
-    image: andon
+    image: git.sztaki.hu:5050/zahoranl/andon-onlab
     container_name: andon_be
     ports:
-      - "8080:80"
+      -  "80:80"
     depends_on:
-      - sql
-    
-  sql:
-    image: "mcr.microsoft.com/mssql/server:2022-latest"
-    container_name: sql_server2022
-    ports: 
-      - "1433:1433" 
+      -  postgres
     environment:
-      - ACCEPT_EULA=y
-      - SA_PASSWORD=A&VeryComplex123Password
-    
+      -  PGQL__HOST=postgres
+      -  PGQL__PORT=5432
+      -  PGQL__USER=postgres
+      -  PGQL__PW=postgres
+      -  PGQL__DB=ALDB
+      
+  postgres:
+    image: postgres
+    container_name: postgres
+    volumes:
+      -  postgresvolume:/var/opt/postgres
+    ports:
+      -  "5432:5432"
+    environment:
+      -  POSTGRES_USER=postgres
+      -  POSTGRES_PASSWORD=postgres
+volumes:
+  postgresvolume:
       

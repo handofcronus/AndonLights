@@ -28,7 +28,7 @@ public class StateService : IStateService
         var states = _stateRepo.GetAllStates();
         foreach (var state in states) 
         {
-            state.updateDailyStats();
+            state.UpdateDailyStats();
         }
         _stateRepo.SaveDb();
     }
@@ -38,7 +38,7 @@ public class StateService : IStateService
         var states = _stateRepo.GetAllStates();
         foreach (var state in states)
         {
-            state.updateMonthlyStats();
+            state.UpdateMonthlyStats();
         }
         _stateRepo.SaveDb();
     }
