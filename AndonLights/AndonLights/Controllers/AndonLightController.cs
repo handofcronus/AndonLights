@@ -20,6 +20,7 @@ public class AndonLightController : ControllerBase
     }
 
 
+    
 
     [HttpGet]
     public ActionResult<IEnumerable<AndonLightDTO>> GetLights()
@@ -104,11 +105,4 @@ public class AndonLightController : ControllerBase
         }
 
     }
-
-
-
-
-
-
-
 }

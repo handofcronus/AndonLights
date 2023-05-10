@@ -30,7 +30,7 @@ public class AndonLightRepository : IAndonLightRepo
         return true;
     }
 
-    public AndonLight GetLightById(int lightId)
+    public AndonLight GetLightByIdWithChildren(int lightId)
     {
         return _dbContext.AndonLights
             .Include(a => a.States).ThenInclude(s => s.DailyStats)
@@ -39,42 +39,58 @@ public class AndonLightRepository : IAndonLightRepo
             .Single(x => x.Id == lightId);
     }
 
-    public IEnumerable<AndonLight> GetLights()
+    public IEnumerable<AndonLight> GetLightsWithoutChildren()
     {
         return _dbContext.AndonLights.ToList();
     }
+
+    public AndonLight GetLightByIdWithoutChildren(int id)
+    {
+        return _dbContext.AndonLights.Single(a => a.Id == id);
+    }
+
+    
 
     public AndonLight Insert(string name)
     {
         AndonLight light = new AndonLight(name) 
         {
             DateOfCreation = new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc),
-            CurrentState = LightStates.Green };
+            CurrentState = LightStates.Green 
+        };
         _dbContext.AndonLights.Add(light);
         _dbContext.SaveChanges();
         return light;
     }
 
-    public AndonLight? UpdateLight(AndonLightDTO andonLightDTO)
+    public AndonLight SwitchState(AndonLight param,string errorMessage)
     {
-        var light = _dbContext.AndonLights.Single(x => x.Id == andonLightDTO.ID);
+        var light = GetLightByIdWithChildren(param.Id);
+        light.SwitchedState(param.CurrentState,errorMessage);
+        _dbContext.SaveChanges();
+        return light;
+    }
+
+    public AndonLight? UpdateLight(AndonLight andonLightDTO)
+    {
+        var light = _dbContext.AndonLights.Single(x => x.Id == andonLightDTO.Id);
         if (light is null)
         {
             return null;
         }
-        try
+        else
         {
-            light.SwitchedState(andonLightDTO);
+            light = andonLightDTO;
         }
-        catch(InvalidOperationException)
-        {
-            _logger.LogInformation($"Light with {light.Id} id is not in a valid state.");
-            throw new InvalidOperationException();
-        }
-        
         _dbContext.SaveChanges();
         return light;
+    }
 
-
+    public IEnumerable<AndonLight> GetLightsWithChildren()
+    {
+        return _dbContext.AndonLights
+            .Include(a => a.States).ThenInclude(s => s.DailyStats)
+            .Include(a => a.States).ThenInclude(s => s.MonthlyStats)
+            .Include(a => a.States).ThenInclude(s => s.ClosedSessions).ToList();
     }
 }

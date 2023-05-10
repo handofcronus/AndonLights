@@ -14,12 +14,17 @@ public class State
     public List<MonthlyStateStats> MonthlyStats { get; }
     public List<DailyStateStats> DailyStats { get; }
 
+    public Session GetCurrentSession()
+    {
+        return _currentSession;
+    }
+
     public State(LightStates StateColour)
     {
         ClosedSessions = new List<Session>();
         MonthlyStats = new List<MonthlyStateStats>();
         DailyStats = new List<DailyStateStats>();
-        _currentSession = new Session(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc));
+        _currentSession = new Session(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc),"");
         this.StateColour = StateColour;
 
     }
@@ -56,14 +61,15 @@ public class State
     }
 
 
-    public void ActivateState(ZonedDateTime timeOfSwitch)
+    public void ActivateState(string errorMessage)
     {
-        _currentSession = new Session(timeOfSwitch);
+        _currentSession = new Session(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc),errorMessage);
     }
 
-    public void CloseState(ZonedDateTime timeOfSwitch)
+    public void CloseState()
     {
-        _currentSession.closeSession(timeOfSwitch);
+
+        _currentSession.closeSession(new ZonedDateTime (SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc));
         ClosedSessions.Add(_currentSession);
     }
 

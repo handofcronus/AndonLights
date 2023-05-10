@@ -11,10 +11,12 @@ public class StateController : ControllerBase
 {
     private IStateService _stateService;
     private ILogger _logger;
-    public StateController(ILogger<StateController> logger,IStateService service)    
+    private IAndonLightService _lightService;
+    public StateController(ILogger<StateController> logger,IStateService service,IAndonLightService lightService)    
     { 
         _stateService = service;
         _logger = logger;
+        _lightService = lightService;
     }
 
 
@@ -44,6 +46,50 @@ public class StateController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError("Error happened at " + nameof(GetDailyStats), e);
+            return BadRequest(e.Message);
+        }
+    }
+
+
+    [HttpPost]
+    public ActionResult<AndonStateDTO> SwitchState([FromBody] AndonStateDTO dto)
+    {
+        try
+        {
+            return _lightService.SwitchState(dto);
+
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error happened at " + nameof(SwitchState), e);
+            return BadRequest(e.Message);
+        }
+    }
+    [HttpGet]
+    public ActionResult<List<AndonStateDTO>> GetAllState()
+    {
+        try
+        {
+            return  Ok(_lightService.GetStates());
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error happened at " + nameof(GetAllState), e);
+            return BadRequest(e.Message);
+        }
+    }
+
+
+    [HttpGet("{id}")]
+    public ActionResult<AndonStateDTO> GetState(int id)
+    {
+        try
+        {
+           return Ok(_lightService.GetState(id));
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error happened at " + nameof(GetState), e);
             return BadRequest(e.Message);
         }
     }

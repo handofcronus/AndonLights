@@ -24,13 +24,13 @@ public class StateRepository : IStateRepo
 
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion)
     {
-        var light = _lightRepository.GetLightById(statsQuestion.id);
+        var light = _lightRepository.GetLightByIdWithChildren(statsQuestion.id);
         return light.GetDailyStatsFromStates(statsQuestion);
     }
 
     public StatsResponseDTO GetMonthlyStats(StatsQuestionDTO statsQuestion)
     {
-        var light = _lightRepository.GetLightById(statsQuestion.id);
+        var light = _lightRepository.GetLightByIdWithChildren(statsQuestion.id);
         return light.GetMonthlyStatsFromStates(statsQuestion);
     }
     public void SaveDb()

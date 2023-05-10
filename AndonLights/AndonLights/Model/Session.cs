@@ -13,10 +13,10 @@ public class Session
     public ZonedDateTime OutTime { get; set; }
 
     [SetsRequiredMembers]
-    public Session(ZonedDateTime inTime)
+    public Session(ZonedDateTime inTime,string errormessage)
     {
         InTime = inTime;
-        
+        ErrorMessage = errormessage;
     }
     public Session()
     {
@@ -28,5 +28,6 @@ public class Session
         OutTime = outTime;
         Duration duration = OutTime - InTime;
         LenghtOfSessionInMinutes = duration.TotalMinutes;
+        
     }
 }
