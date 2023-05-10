@@ -20,5 +20,5 @@ public class AndonLightDTO
 
 public record AndonStateDTO(int id,string state)
 {
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 }

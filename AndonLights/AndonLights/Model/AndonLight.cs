@@ -39,7 +39,7 @@ public class AndonLight
     public string GetLastErrorMessage()
     {
         State currentState = GetStateWithColour(CurrentState);
-        return currentState.GetCurrentSession().ErrorMessage ?? "";
+        return currentState.GetLastErrorMessage();
     }
     public void SwitchedState(LightStates newState,string errorMessage)
     {

@@ -53,11 +53,11 @@ public class AndonLightService : IAndonLightService
 
     public AndonStateDTO SwitchState(AndonStateDTO dto)
     {
-        return modelToStateDTO(_andonLightRepository.SwitchState(dtoStateToModel(dto),dto.ErrorMessage));
+        return modelToStateDTO(_andonLightRepository.SwitchState(dtoStateToModel(dto),dto.ErrorMessage ?? ""));
     }
     public AndonStateDTO GetState(int id)
     {
-        var lights = _andonLightRepository.GetLightByIdWithoutChildren(id);
+        var lights = _andonLightRepository.GetLightByIdWithChildren(id);
         return modelToStateDTO(lights);
     }
 

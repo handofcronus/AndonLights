@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AndonLights.Model;
 
-public class Session
+public class Session: IComparable<Session>
 {
     public int StateId { get; set; }
     public int Id { get; set; }
@@ -30,4 +30,11 @@ public class Session
         LenghtOfSessionInMinutes = duration.TotalMinutes;
         
     }
+
+    public int CompareTo(Session? other)
+    {
+        return InTime.Date.CompareTo(other.InTime.Date);
+    }
+
+    
 }
