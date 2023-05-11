@@ -13,6 +13,7 @@ public class State
     public LightStates StateColour { get; set; }
     public List<MonthlyStateStats> MonthlyStats { get; }
     public List<DailyStateStats> DailyStats { get; }
+    private bool _sessionsAreSorted = false;
 
     public string GetLastErrorMessage()
     {
@@ -112,7 +113,11 @@ public class State
 
     private Session getLastSession()
     {
-        ClosedSessions.Sort();
+        if(!_sessionsAreSorted)
+        {
+            ClosedSessions.Sort();
+            _sessionsAreSorted = true;
+        }
         return ClosedSessions.Last();
     }
 }
