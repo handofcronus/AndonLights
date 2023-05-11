@@ -9,17 +9,22 @@ public class State
     public int ID { get; set; }
     public List<Session> ClosedSessions { get; } = new List<Session>();
 
-    private Session _currentSession;
+   // private Session _currentSession;
     public LightStates StateColour { get; set; }
     public List<MonthlyStateStats> MonthlyStats { get; }
     public List<DailyStateStats> DailyStats { get; }
+
+    public string GetLastErrorMessage()
+    {
+        var lastSession = getLastSession();
+        return lastSession.ErrorMessage??"";
+    }
 
     public State(LightStates StateColour)
     {
         ClosedSessions = new List<Session>();
         MonthlyStats = new List<MonthlyStateStats>();
         DailyStats = new List<DailyStateStats>();
-        _currentSession = new Session(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc));
         this.StateColour = StateColour;
 
     }
@@ -56,15 +61,21 @@ public class State
     }
 
 
-    public void ActivateState(ZonedDateTime timeOfSwitch)
+    public void ActivateState(string errorMessage)
     {
-        _currentSession = new Session(timeOfSwitch);
+        var currentSession = new Session(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc),errorMessage);
+        ClosedSessions.Add(currentSession);
     }
 
-    public void CloseState(ZonedDateTime timeOfSwitch)
+    public void CloseState()
     {
-        _currentSession.closeSession(timeOfSwitch);
-        ClosedSessions.Add(_currentSession);
+        if(ClosedSessions.Count == 0)
+        {
+            return;
+        }
+        ClosedSessions.Sort();
+        var lastSession = ClosedSessions.Last();
+        lastSession.closeSession(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc));
     }
 
     private List<Session> GetSessionsFromADay(ZonedDateTime date, List<Session> closedSessions)
@@ -97,5 +108,11 @@ public class State
             }
         }
         return new MonthlyStateStats();
+    }
+
+    private Session getLastSession()
+    {
+        ClosedSessions.Sort();
+        return ClosedSessions.Last();
     }
 }

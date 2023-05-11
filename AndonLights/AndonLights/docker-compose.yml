@@ -16,7 +16,7 @@ services:
       -  PGQL__DB=ALDB
       
   postgres:
-    image: postgres
+    image: postgres:15.2
     container_name: postgres
     volumes:
       -  postgresvolume:/var/opt/postgres

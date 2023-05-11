@@ -33,36 +33,42 @@ public class AndonLight
     protected AndonLight() 
     {
         States = new List<State>();
+        Name = "Default";
     }
 
-    public void SwitchedState(AndonLightDTO andonLight)
+    public string GetLastErrorMessage()
+    {
+        State currentState = GetStateWithColour(CurrentState);
+        return currentState.GetLastErrorMessage();
+    }
+    public void SwitchedState(LightStates newState,string errorMessage)
     {
         try
         {
             switch (this.CurrentState)
             {
                 case LightStates.Green:
-                    GetStateWithColour(LightStates.Green).CloseState(andonLight.time);
+                    GetStateWithColour(LightStates.Green).CloseState();
                     break;
                 case LightStates.Yellow:
-                    GetStateWithColour(LightStates.Yellow).CloseState(andonLight.time);
+                    GetStateWithColour(LightStates.Yellow).CloseState();
                     break;
                 case LightStates.Red:
-                    GetStateWithColour(LightStates.Red).CloseState(andonLight.time);
+                    GetStateWithColour(LightStates.Red).CloseState();
                     break;
             }
-            switch (andonLight.State)
+            switch (newState)
             {
                 case LightStates.Green:
-                    GetStateWithColour(LightStates.Green).ActivateState(andonLight.time);
+                    GetStateWithColour(LightStates.Green).ActivateState(errorMessage);
                     CurrentState = LightStates.Green;
                     break;
                 case LightStates.Yellow:
-                    GetStateWithColour(LightStates.Yellow).ActivateState(andonLight.time);
+                    GetStateWithColour(LightStates.Yellow).ActivateState(errorMessage);
                     CurrentState = LightStates.Yellow;
                     break;
                 case LightStates.Red:
-                    GetStateWithColour(LightStates.Red).ActivateState(andonLight.time);
+                    GetStateWithColour(LightStates.Red).ActivateState(errorMessage);
                     CurrentState = LightStates.Red;
                     break;
             }
