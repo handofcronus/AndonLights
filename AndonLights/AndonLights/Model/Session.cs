@@ -8,15 +8,13 @@ public class Session: IComparable<Session>
     public int StateId { get; set; }
     public int Id { get; set; }
     public double LenghtOfSessionInMinutes { get; set; }
-    public string? ErrorMessage { get; set; }
     public required ZonedDateTime InTime { get; set; }
     public ZonedDateTime OutTime { get; set; }
 
     [SetsRequiredMembers]
-    public Session(ZonedDateTime inTime,string errormessage)
+    public Session(ZonedDateTime inTime)
     {
         InTime = inTime;
-        ErrorMessage = errormessage;
     }
     public Session()
     {

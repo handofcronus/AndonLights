@@ -14,6 +14,7 @@ public class AndonLight
     public required ZonedDateTime DateOfCreation { get; init; }
 
     public List<State> States { get;set; }
+    public string LastErrorMessage { get; set; }
 
     
 
@@ -29,20 +30,23 @@ public class AndonLight
             new State(LightStates.Yellow),
             new State(LightStates.Red),
         };
+        LastErrorMessage = string.Empty;
     }
     protected AndonLight() 
     {
         States = new List<State>();
         Name = "Default";
+        LastErrorMessage = string.Empty;
     }
 
     public string GetLastErrorMessage()
     {
-        State currentState = GetStateWithColour(CurrentState);
-        return currentState.GetLastErrorMessage();
+       
+        return LastErrorMessage;
     }
     public void SwitchedState(LightStates newState,string errorMessage)
     {
+        LastErrorMessage = errorMessage;
         try
         {
             switch (this.CurrentState)
@@ -60,15 +64,15 @@ public class AndonLight
             switch (newState)
             {
                 case LightStates.Green:
-                    GetStateWithColour(LightStates.Green).ActivateState(errorMessage);
+                    GetStateWithColour(LightStates.Green).ActivateState();
                     CurrentState = LightStates.Green;
                     break;
                 case LightStates.Yellow:
-                    GetStateWithColour(LightStates.Yellow).ActivateState(errorMessage);
+                    GetStateWithColour(LightStates.Yellow).ActivateState();
                     CurrentState = LightStates.Yellow;
                     break;
                 case LightStates.Red:
-                    GetStateWithColour(LightStates.Red).ActivateState(errorMessage);
+                    GetStateWithColour(LightStates.Red).ActivateState();
                     CurrentState = LightStates.Red;
                     break;
             }

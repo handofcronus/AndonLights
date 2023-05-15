@@ -57,7 +57,7 @@ public class AndonLightsDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Session>().ToTable("Sessions");
         modelBuilder.Entity<Session>().HasKey(s => s.Id);
-        modelBuilder.Entity<Session>().Property(s=>s.ErrorMessage).HasMaxLength(150);
+//modelBuilder.Entity<Session>().Property(s=>s.ErrorMessage).HasMaxLength(150);
 
 
         modelBuilder.Entity<State>().ToTable("States");
@@ -84,6 +84,7 @@ public class AndonLightsDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<AndonLight>().Property(a => a.CurrentState).HasConversion<string>();
         modelBuilder.Entity<AndonLight>().Property(a => a.Name).HasMaxLength(150);
+        modelBuilder.Entity<AndonLight>().Property(a => a.LastErrorMessage).HasMaxLength(250);
 
 
         modelBuilder.Entity<DailyStateStats>().ToTable("DailyStateStats");

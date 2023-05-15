@@ -2,6 +2,7 @@
 using AndonLights.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AndonLights.Migrations
 {
     [DbContext(typeof(AndonLightsDbContext))]
-    partial class AndonLightsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230515130834_split")]
+    partial class split
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,11 +39,6 @@ namespace AndonLights.Migrations
 
                     b.Property<ZonedDateTime>("DateOfCreation")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LastErrorMessage")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -114,6 +112,10 @@ namespace AndonLights.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
                     b.Property<ZonedDateTime>("InTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -136,10 +138,7 @@ namespace AndonLights.Migrations
             modelBuilder.Entity("AndonLights.Model.State", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int>("LightID")
                         .HasColumnType("integer");
@@ -184,11 +183,19 @@ namespace AndonLights.Migrations
 
             modelBuilder.Entity("AndonLights.Model.State", b =>
                 {
+                    b.HasOne("AndonLights.Model.Session", "CurrentSession")
+                        .WithOne()
+                        .HasForeignKey("AndonLights.Model.State", "ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AndonLights.Model.AndonLight", null)
                         .WithMany("States")
                         .HasForeignKey("LightID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CurrentSession");
                 });
 
             modelBuilder.Entity("AndonLights.Model.AndonLight", b =>

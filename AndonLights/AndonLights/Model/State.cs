@@ -8,18 +8,10 @@ public class State
     public int LightID { get; set; }
     public int ID { get; set; }
     public List<Session> ClosedSessions { get; } = new List<Session>();
-
-   // private Session _currentSession;
     public LightStates StateColour { get; set; }
     public List<MonthlyStateStats> MonthlyStats { get; }
     public List<DailyStateStats> DailyStats { get; }
     private bool _sessionsAreSorted = false;
-
-    public string GetLastErrorMessage()
-    {
-        var lastSession = getLastSession();
-        return lastSession.ErrorMessage??"";
-    }
 
     public State(LightStates StateColour)
     {
@@ -62,9 +54,9 @@ public class State
     }
 
 
-    public void ActivateState(string errorMessage)
+    public void ActivateState()
     {
-        var currentSession = new Session(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc),errorMessage);
+        var currentSession = new Session(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc));
         ClosedSessions.Add(currentSession);
     }
 
@@ -111,13 +103,4 @@ public class State
         return new MonthlyStateStats();
     }
 
-    private Session getLastSession()
-    {
-        if(!_sessionsAreSorted)
-        {
-            ClosedSessions.Sort();
-            _sessionsAreSorted = true;
-        }
-        return ClosedSessions.Last();
-    }
 }
