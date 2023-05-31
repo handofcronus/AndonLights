@@ -1,5 +1,6 @@
 ﻿using AndonLights.DTOs;
 using NodaTime;
+using NodaTime.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AndonLights.Model;
@@ -86,15 +87,15 @@ public class AndonLight
 
     public StatsResponseDTO GetDailyStatsFromStates(StatsQuestionDTO questionDTO)
     {
-        return new StatsResponseDTO(States[0].GetDailyStats(questionDTO.Time)
-            , States[1].GetDailyStats(questionDTO.Time)
-            , States[2].GetDailyStats(questionDTO.Time));
+        return new StatsResponseDTO(States[0].GetDailyStats(questionDTO.Date.ToLocalDateTime())
+            , States[1].GetDailyStats(questionDTO.Date.ToLocalDateTime())
+            , States[2].GetDailyStats(questionDTO.Date.ToLocalDateTime()));
     }
     public StatsResponseDTO GetMonthlyStatsFromStates(StatsQuestionDTO questionDTO)
     {
-        return new StatsResponseDTO(States[0].GetMonthlyStats(questionDTO.Time)
-            , States[1].GetMonthlyStats(questionDTO.Time)
-            , States[2].GetMonthlyStats(questionDTO.Time));
+        return new StatsResponseDTO(States[0].GetMonthlyStats(questionDTO.Date.ToLocalDateTime())
+            , States[1].GetMonthlyStats(questionDTO.Date.ToLocalDateTime())
+            , States[2].GetMonthlyStats(questionDTO.Date.ToLocalDateTime()));
     }
     private State GetStateWithColour(LightStates lightState) 
     {

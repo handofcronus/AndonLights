@@ -1,6 +1,9 @@
-﻿using NodaTime;
-
+﻿
 namespace AndonLights.DTOs;
 
-public record class StatsQuestionDTO(int id, ZonedDateTime Time);
+public  class StatsQuestionDTO
+{
+    public int Id { get; set; }
+    public DateTime Date { get; set; }
+}
 

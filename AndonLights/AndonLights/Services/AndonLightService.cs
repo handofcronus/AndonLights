@@ -10,8 +10,8 @@ namespace AndonLights.Services;
 public class AndonLightService : IAndonLightService
 {
 
-    private IAndonLightRepo _andonLightRepository;
-    private ILogger<AndonLightService> _logger;
+    private readonly IAndonLightRepo _andonLightRepository;
+    private readonly ILogger<AndonLightService> _logger;
 
     public AndonLightService(IAndonLightRepo andonLightRepository, ILogger<AndonLightService> logger)
     {
@@ -42,9 +42,9 @@ public class AndonLightService : IAndonLightService
         return _andonLightRepository.DeleteLight(id);
     }
 
-    public AndonLightDTO? UpdateLight(AndonLightDTO dto)
+    public AndonLightDTO? UpdateLight(UpdateLightDTO dto)
     {
-        var light = _andonLightRepository.UpdateLight(dto.ToModel());
+        var light = _andonLightRepository.UpdateLight(dto);
         if (light is null)
         {
             return null;

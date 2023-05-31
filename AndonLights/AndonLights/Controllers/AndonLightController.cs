@@ -10,8 +10,8 @@ namespace AndonLights.Controllers;
 [Route("/api/v1/[controller]")]
 public class AndonLightController : ControllerBase
 {
-    private IAndonLightService _lightService;
-    private ILogger _logger;
+    private readonly IAndonLightService _lightService;
+    private readonly ILogger _logger;
     public AndonLightController(ILogger<AndonLightController> logger, IAndonLightService andonLightService)
     {
         _lightService = andonLightService;
@@ -80,7 +80,7 @@ public class AndonLightController : ControllerBase
         try
         {
             var res = _lightService.DeleteLight(id);
-            return res == true ? Ok() : NotFound();
+            return res ? Ok() : NotFound();
         }
         catch (Exception e)
         {
@@ -91,7 +91,7 @@ public class AndonLightController : ControllerBase
 
 
     [HttpPatch]
-    public ActionResult<AndonLightDTO> UpdateLight([FromBody] AndonLightDTO andonLight)
+    public ActionResult<AndonLightDTO> UpdateLight([FromBody] UpdateLightDTO andonLight)
     {
         try
         {

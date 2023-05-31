@@ -7,11 +7,10 @@ public class State
 {
     public int LightID { get; set; }
     public int ID { get; set; }
-    public List<Session> ClosedSessions { get; } = new List<Session>();
+    public List<Session> ClosedSessions { get; } 
     public LightStates StateColour { get; set; }
     public List<MonthlyStateStats> MonthlyStats { get; }
     public List<DailyStateStats> DailyStats { get; }
-    private bool _sessionsAreSorted = false;
 
     public State(LightStates StateColour)
     {
@@ -44,11 +43,11 @@ public class State
         }
     }
 
-    public DailyStateStats? GetDailyStats(ZonedDateTime time)
+    public DailyStateStats? GetDailyStats(LocalDateTime time)
     {
-        return DailyStats.Find(x => x.DateOfStats.Date == time.Date);
+        return DailyStats.Find(x => x.DateOfStats.LocalDateTime.Date == time.Date);
     }
-    public MonthlyStateStats? GetMonthlyStats(ZonedDateTime time)
+    public MonthlyStateStats? GetMonthlyStats(LocalDateTime time)
     {
         return MonthlyStats.Find(x => x.DateOfStats.Date.Year == time.Date.Year && x.DateOfStats.Month == time.Date.Month);
     }

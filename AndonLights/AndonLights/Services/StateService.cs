@@ -15,11 +15,13 @@ public class StateService : IStateService
 
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion)
     {
+        UpdateAllDailyStats();
         return _stateRepo.GetDailyStats(statsQuestion);
     }
 
     public StatsResponseDTO GetMonthlyStats(StatsQuestionDTO statsQuestion)
     {
+        UpdateAllMonthlyStats();
         return _stateRepo.GetMonthlyStats(statsQuestion);
     }
 
