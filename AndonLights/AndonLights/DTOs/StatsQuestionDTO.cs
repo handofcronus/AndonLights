@@ -7,3 +7,12 @@ public  class StatsQuestionDTO
     public DateTime Date { get; set; }
 }
 
+public class StatsQuestionVersion2DTO
+{
+    public int Id { get; set; }
+    public int Year { get; set; }
+    public int Month { get; set; }
+    public int Day { get; set; }
+
+}
+

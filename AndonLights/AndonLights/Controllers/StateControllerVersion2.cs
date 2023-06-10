@@ -6,13 +6,13 @@ namespace AndonLights.Controllers;
 
 
 [ApiController]
-[Route("/api/v1/[controller]")]
-public class StateController : ControllerBase
+[Route("/api/v2/[controller]")]
+public class StateControllerVersion2 : ControllerBase
 {
     private readonly IStateService _stateService;
     private readonly ILogger _logger;
     private readonly IAndonLightService _lightService;
-    public StateController(ILogger<StateController> logger,IStateService service,IAndonLightService lightService)    
+    public StateControllerVersion2(ILogger<StateController> logger,IStateService service,IAndonLightService lightService)    
     { 
         _stateService = service;
         _logger = logger;
@@ -20,12 +20,16 @@ public class StateController : ControllerBase
     }
 
 
-    [HttpGet("daily")]
-    public ActionResult<StatsResponseDTO> GetDailyStats([FromQuery] StatsQuestionDTO statsQuestion)
+    [HttpGet("statdaily")]
+    public ActionResult<StatsResponseDTO> GetDailyStats([FromQuery] StatsQuestionVersion2DTO statsQuestion)
     {
         try
         {
-            var res = _stateService.GetDailyStats(statsQuestion);
+            var q = new StatsQuestionDTO
+            {
+                Date = new DateTime(statsQuestion.Year, statsQuestion.Month, statsQuestion.Day),
+            };
+            var res = _stateService.GetDailyStats(q);
             return res == null ? NotFound() : Ok(res);
         }
         catch (Exception e)
@@ -35,12 +39,16 @@ public class StateController : ControllerBase
         }
     }
 
-    [HttpGet("monthly")]
-    public ActionResult<StatsResponseDTO> GetMonthlyStats([FromQuery] StatsQuestionDTO statsQuestion)
+    [HttpGet("statmonthly")]
+    public ActionResult<StatsResponseDTO> GetMonthlyStats([FromQuery] StatsQuestionVersion2DTO statsQuestion)
     {
         try
         {
-            var res = _stateService.GetMonthlyStats(statsQuestion);
+            var q = new StatsQuestionDTO
+            {
+                Date = new DateTime(statsQuestion.Year, statsQuestion.Month, statsQuestion.Day),
+            };
+            var res = _stateService.GetMonthlyStats(q);
             return res == null ? NotFound() : Ok(res);
         }
         catch (Exception e)
