@@ -1,4 +1,5 @@
 ﻿using AndonLights.DTOs;
+using AndonLights.Model;
 using AndonLights.Services;
 using AndonLights.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,12 @@ public class AndonLightControllerVersion2 : ControllerBase
 {
     private readonly IAndonLightService _lightService;
     private readonly ILogger _logger;
-    public AndonLightControllerVersion2(ILogger<AndonLightController> logger, IAndonLightService andonLightService)
+    private readonly IClientService _clientService;
+    public AndonLightControllerVersion2(ILogger<AndonLightController> logger, IAndonLightService andonLightService,IClientService clientService)
     {
         _lightService = andonLightService;
         _logger = logger;
-
+        _clientService = clientService;
     }
 
 
@@ -104,5 +106,20 @@ public class AndonLightControllerVersion2 : ControllerBase
             return BadRequest(e.Message);
         }
 
+    }
+
+    [HttpPost("/client/{name}")]
+    public ActionResult<string> RequestApiKey(string name)
+    {
+        try
+        {
+            var res = _clientService.CreateClient(name);
+            return Ok(res.ApiKey);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error happened at " + nameof(RequestApiKey), e);
+            return BadRequest(e.Message);
+        }
     }
 }

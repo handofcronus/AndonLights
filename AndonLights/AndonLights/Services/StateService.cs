@@ -6,7 +6,7 @@ namespace AndonLights.Services;
 
 public class StateService : IStateService
 {
-    private IStateRepo _stateRepo;
+    private readonly IStateRepo _stateRepo;
 
     public StateService(IStateRepo stateServiceRepo)
     {

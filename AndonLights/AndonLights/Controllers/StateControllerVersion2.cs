@@ -1,10 +1,11 @@
-﻿using AndonLights.DTOs;
+﻿using AndonLights.Controllers.Attributes;
+using AndonLights.DTOs;
 using AndonLights.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AndonLights.Controllers;
 
-
+[TypeFilter(typeof(ApiKeyAttribute))]
 [ApiController]
 [Route("/api/v2/[controller]")]
 public class StateControllerVersion2 : ControllerBase

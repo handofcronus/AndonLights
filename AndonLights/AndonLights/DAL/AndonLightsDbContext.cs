@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 //using Microsoft.Extensions.Configuration;
-using System.Configuration;
-using System.Runtime.CompilerServices;
+
 
 namespace AndonLights.DAL;
 
@@ -15,7 +14,8 @@ public class AndonLightsDbContext : DbContext
     public DbSet<State> States { get; set; }
     public DbSet<AndonLight> AndonLights { get; set; }
     public DbSet<MonthlyStateStats> MonthlyStateStats{ get; set; }
-    public DbSet<DailyStateStats> dailyStateStats{ get; set; }
+    public DbSet<DailyStateStats> DailyStateStats{ get; set; }
+    public DbSet<Client> Clients { get; set; }
     public AndonLightsDbContext(DbContextOptions<AndonLightsDbContext> options ):base(options)
     {
        
@@ -90,11 +90,12 @@ public class AndonLightsDbContext : DbContext
         modelBuilder.Entity<DailyStateStats>().ToTable("DailyStateStats");
         modelBuilder.Entity<DailyStateStats>().HasKey(a => a.Id);
         
-
-
         modelBuilder.Entity<MonthlyStateStats>().ToTable("MonthlyStateStats");
         modelBuilder.Entity<MonthlyStateStats>().HasKey(a => a.Id);
-        
+
+
+        modelBuilder.Entity<Client>().HasKey(clients => clients.Id);
+        modelBuilder.Entity<Client>().ToTable("Clients");
 
     }
 

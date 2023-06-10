@@ -1,7 +1,6 @@
+using AndonLights.Controllers.Attributes;
 using AndonLights.DAL;
 using AndonLights.DAL.Repositories.Interfaces;
-using AndonLights.DTOs;
-using AndonLights.Model;
 using AndonLights.Repositories;
 using AndonLights.Services;
 using AndonLights.Services.Interfaces;
@@ -23,6 +22,9 @@ builder.Services.AddScoped<IAndonLightService, AndonLightService>();
 
 builder.Services.AddScoped<IStateRepo, StateRepository>();
 builder.Services.AddScoped<IStateService, StateService>();
+
+builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 var connHost = Environment.GetEnvironmentVariable("PGQL__HOST");
 var connUser = Environment.GetEnvironmentVariable("PGQL__USER");
@@ -70,7 +72,13 @@ using (var serviceScope = app.Services.CreateScope())
 }
 
 
-
+ApiKeyService k = new ApiKeyService();
+int i = 0;
+while (i < 50)
+{
+    k.GenerateApiKey();
+    i++;
+}
 
 
 app.Run();
