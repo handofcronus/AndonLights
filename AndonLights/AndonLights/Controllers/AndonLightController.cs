@@ -10,8 +10,8 @@ namespace AndonLights.Controllers;
 [Route("/api/v1/[controller]")]
 public class AndonLightController : ControllerBase
 {
-    private readonly IAndonLightService _lightService;
-    private readonly ILogger _logger;
+    private IAndonLightService _lightService;
+    private ILogger _logger;
     public AndonLightController(ILogger<AndonLightController> logger, IAndonLightService andonLightService)
     {
         _lightService = andonLightService;
@@ -20,18 +20,9 @@ public class AndonLightController : ControllerBase
     }
 
 
-
-
-    /// <summary>
-    /// Retrieves all the lights in full detail.
-    /// </summary>
-    /// <returns>Returns the lights</returns>
-    /// <response code="200">Ok</response>
-    /// <response code="404">Lights not found</response>
+    
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<IEnumerable<AndonLightDTO>> GetLights()
     {
         try
@@ -48,16 +39,7 @@ public class AndonLightController : ControllerBase
     }
 
 
-    /// <summary>
-    /// Retrieves a light in full detail.
-    /// </summary>
-    /// <param name="id">The light's id</param>
-    /// <returns>Returns the light</returns>
-    /// <response code="200">Ok</response>
-    /// <response code="404"> Light not found</response>
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<AndonLightDTO> GetLight(int id)
     {
         try
@@ -75,16 +57,7 @@ public class AndonLightController : ControllerBase
     }
 
 
-    /// <summary>
-    /// Creates a light with the given name.
-    /// </summary>
-    /// <param name="name">The light's name</param>
-    /// <returns>Returns the result of the request</returns>
-    /// <response code="200">Ok</response>
-    /// <response code="400">Bad request</response>
     [HttpPost("{name}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<AndonLightDTO> CreateLight(string name)
     {
         try
@@ -101,22 +74,13 @@ public class AndonLightController : ControllerBase
 
     }
 
-    /// <summary>
-    /// Deletes a light with the id.
-    /// </summary>
-    /// <param name="id">The light's id</param>
-    /// <returns>Returns the result of the request</returns>
-    /// <response code="200">Ok</response>
-    /// <response code="404">Light not found with this id</response>
     [HttpDelete]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult DeleteLight(int id)
     {
         try
         {
             var res = _lightService.DeleteLight(id);
-            return res ? Ok() : NotFound();
+            return res == true ? Ok() : NotFound();
         }
         catch (Exception e)
         {
@@ -124,17 +88,10 @@ public class AndonLightController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    /// <summary>
-    /// Update a lights name.
-    /// </summary>
-    /// <param name="andonLight">Dto with the light's id and name</param>
-    /// <returns>Returns the changed light</returns>
-    /// <response code="200">Ok</response>
-    /// <response code="404">Light not found with this id</response>
+
+
     [HttpPatch]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<AndonLightDTO> UpdateLight([FromBody] UpdateLightDTO andonLight)
+    public ActionResult<AndonLightDTO> UpdateLight([FromBody] AndonLightDTO andonLight)
     {
         try
         {

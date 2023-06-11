@@ -6,7 +6,7 @@ namespace AndonLights.Services;
 
 public class StateService : IStateService
 {
-    private readonly IStateRepo _stateRepo;
+    private IStateRepo _stateRepo;
 
     public StateService(IStateRepo stateServiceRepo)
     {
@@ -15,13 +15,11 @@ public class StateService : IStateService
 
     public StatsResponseDTO GetDailyStats(StatsQuestionDTO statsQuestion)
     {
-        UpdateAllDailyStats();
         return _stateRepo.GetDailyStats(statsQuestion);
     }
 
     public StatsResponseDTO GetMonthlyStats(StatsQuestionDTO statsQuestion)
     {
-        UpdateAllMonthlyStats();
         return _stateRepo.GetMonthlyStats(statsQuestion);
     }
 

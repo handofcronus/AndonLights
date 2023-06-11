@@ -1,21 +1,20 @@
-using AndonLights.Controllers.Attributes;
 using AndonLights.DAL;
 using AndonLights.DAL.Repositories.Interfaces;
+using AndonLights.DTOs;
+using AndonLights.Model;
 using AndonLights.Repositories;
 using AndonLights.Services;
 using AndonLights.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-builder.Services.AddOpenApiDocument();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddHostedService<TimedHostedService>(); 
 
@@ -24,9 +23,6 @@ builder.Services.AddScoped<IAndonLightService, AndonLightService>();
 
 builder.Services.AddScoped<IStateRepo, StateRepository>();
 builder.Services.AddScoped<IStateService, StateService>();
-
-builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
-builder.Services.AddScoped<IClientService, ClientService>();
 
 var connHost = Environment.GetEnvironmentVariable("PGQL__HOST");
 var connUser = Environment.GetEnvironmentVariable("PGQL__USER");
@@ -57,10 +53,8 @@ app.Logger.LogInformation(connString);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
-    app.UseOpenApi();
-    app.UseSwaggerUi3();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -76,13 +70,7 @@ using (var serviceScope = app.Services.CreateScope())
 }
 
 
-ApiKeyService k = new ApiKeyService();
-int i = 0;
-while (i < 50)
-{
-    k.GenerateApiKey();
-    i++;
-}
+
 
 
 app.Run();
