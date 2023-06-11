@@ -9,9 +9,19 @@
     
     public static class LightStateHelper
     {
-        public static string ToStrfing(LightStates states)
+        public static string ToString(LightStates states)
         {
-            return "";
+            switch (states)
+            {
+                case LightStates.Red:
+                    return "Red";
+                case LightStates.Green:
+                    return "Green";
+                case LightStates.Yellow:
+                    return "Yellow";
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
         public static LightStates FromString(string value) 

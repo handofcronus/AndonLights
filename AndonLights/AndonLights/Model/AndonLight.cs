@@ -1,6 +1,5 @@
 ﻿using AndonLights.DTOs;
 using NodaTime;
-using NodaTime.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AndonLights.Model;
@@ -15,7 +14,6 @@ public class AndonLight
     public required ZonedDateTime DateOfCreation { get; init; }
 
     public List<State> States { get;set; }
-    public string LastErrorMessage { get; set; }
 
     
 
@@ -31,23 +29,20 @@ public class AndonLight
             new State(LightStates.Yellow),
             new State(LightStates.Red),
         };
-        LastErrorMessage = string.Empty;
     }
     protected AndonLight() 
     {
         States = new List<State>();
         Name = "Default";
-        LastErrorMessage = string.Empty;
     }
 
     public string GetLastErrorMessage()
     {
-       
-        return LastErrorMessage;
+        State currentState = GetStateWithColour(CurrentState);
+        return currentState.GetLastErrorMessage();
     }
     public void SwitchedState(LightStates newState,string errorMessage)
     {
-        LastErrorMessage = errorMessage;
         try
         {
             switch (this.CurrentState)
@@ -65,15 +60,15 @@ public class AndonLight
             switch (newState)
             {
                 case LightStates.Green:
-                    GetStateWithColour(LightStates.Green).ActivateState();
+                    GetStateWithColour(LightStates.Green).ActivateState(errorMessage);
                     CurrentState = LightStates.Green;
                     break;
                 case LightStates.Yellow:
-                    GetStateWithColour(LightStates.Yellow).ActivateState();
+                    GetStateWithColour(LightStates.Yellow).ActivateState(errorMessage);
                     CurrentState = LightStates.Yellow;
                     break;
                 case LightStates.Red:
-                    GetStateWithColour(LightStates.Red).ActivateState();
+                    GetStateWithColour(LightStates.Red).ActivateState(errorMessage);
                     CurrentState = LightStates.Red;
                     break;
             }
@@ -87,15 +82,15 @@ public class AndonLight
 
     public StatsResponseDTO GetDailyStatsFromStates(StatsQuestionDTO questionDTO)
     {
-        return new StatsResponseDTO(States[0].GetDailyStats(questionDTO.Date.ToLocalDateTime())
-            , States[1].GetDailyStats(questionDTO.Date.ToLocalDateTime())
-            , States[2].GetDailyStats(questionDTO.Date.ToLocalDateTime()));
+        return new StatsResponseDTO(States[0].GetDailyStats(questionDTO.Time)
+            , States[1].GetDailyStats(questionDTO.Time)
+            , States[2].GetDailyStats(questionDTO.Time));
     }
     public StatsResponseDTO GetMonthlyStatsFromStates(StatsQuestionDTO questionDTO)
     {
-        return new StatsResponseDTO(States[0].GetMonthlyStats(questionDTO.Date.ToLocalDateTime())
-            , States[1].GetMonthlyStats(questionDTO.Date.ToLocalDateTime())
-            , States[2].GetMonthlyStats(questionDTO.Date.ToLocalDateTime()));
+        return new StatsResponseDTO(States[0].GetMonthlyStats(questionDTO.Time)
+            , States[1].GetMonthlyStats(questionDTO.Time)
+            , States[2].GetMonthlyStats(questionDTO.Time));
     }
     private State GetStateWithColour(LightStates lightState) 
     {

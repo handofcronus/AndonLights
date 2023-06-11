@@ -2,8 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
-namespace AndonLights.Services;
-
 public class TimedHostedService : IHostedService, IDisposable
 {
     private readonly ILogger<TimedHostedService> _logger;
@@ -21,7 +19,7 @@ public class TimedHostedService : IHostedService, IDisposable
         _monthOfLastMonthlyUpdate = DateTime.MinValue;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken stoppingToken)
     {
         _dailyTimer = new Timer(DoDailyWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
         _monthlyTimer = new Timer(DoMonthlyWork, null, TimeSpan.Zero, TimeSpan.FromDays(1));
@@ -33,19 +31,22 @@ public class TimedHostedService : IHostedService, IDisposable
     {
         var today = DateTime.Today;
         bool isUpdateNeeded = false;
-        if (today.Year == _monthOfLastMonthlyUpdate.Year && today.Month > _monthOfLastMonthlyUpdate.Month)
+        if (today.Year==_monthOfLastMonthlyUpdate.Year)
         {
-            isUpdateNeeded = true;
+            if(today.Month>_monthOfLastMonthlyUpdate.Month)
+            {
+                isUpdateNeeded = true;
+            }
         }
-        if (today.Year > _monthOfLastMonthlyUpdate.Year)
+        if(today.Year>_monthOfLastMonthlyUpdate.Year)
         {
-            isUpdateNeeded = true;
+            isUpdateNeeded= true;
         }
-        if (isUpdateNeeded)
+        if(isUpdateNeeded)
         {
             using var scope = _serviceProvider.CreateScope();
             var stateService = scope.ServiceProvider.GetService<IStateService>();
-            if (IsNotNull(stateService))
+            if(IsNotNull(stateService))
             {
                 stateService.UpdateAllMonthlyStats();
                 _monthOfLastMonthlyUpdate = today;
@@ -65,10 +66,10 @@ public class TimedHostedService : IHostedService, IDisposable
         {
             using var scope = _serviceProvider.CreateScope();
             var stateService = scope.ServiceProvider.GetService<IStateService>();
-            if (IsNotNull(stateService))
+            if(IsNotNull(stateService))
             {
                 stateService.UpdateAllDailyStats();
-                _dayOfLastDailyUpdate = today;
+                _dayOfLastDailyUpdate=today;
                 _logger.LogInformation($"Timed Hosted Service has updated {today}-s daily statistics.");
             }
             else
@@ -78,7 +79,7 @@ public class TimedHostedService : IHostedService, IDisposable
         }
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken stoppingToken)
     {
         _dailyTimer?.Change(Timeout.Infinite, 0);
         _monthlyTimer?.Change(Timeout.Infinite, 0);
@@ -92,8 +93,8 @@ public class TimedHostedService : IHostedService, IDisposable
         _monthlyTimer?.Dispose();
     }
 
-    private bool IsNotNull([NotNullWhen(true)] object? obj)
+    private bool IsNotNull([NotNullWhen(true)]object? obj)
     {
-        return obj != null;
+        return obj!= null ? true: false;
     }
 }
