@@ -6,4 +6,5 @@ public interface IClientService
 {
     public Client CreateClient(string name);
     public bool CheckApiKey(string ApiKey);
+    public Client RequestNewKey(string name);
 }

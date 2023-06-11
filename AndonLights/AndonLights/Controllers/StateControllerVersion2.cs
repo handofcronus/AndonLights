@@ -20,15 +20,25 @@ public class StateControllerVersion2 : ControllerBase
         _lightService = lightService;
     }
 
-
+    /// <summary>
+    /// Gets the given days statistics about the light.
+    /// </summary>
+    /// <param name="statsQuestion">The dto containing the lights id and the date associated with statistics</param>
+    /// <returns>Returns the statistics about the light on the given day</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="404">Light not found with this id</response>
+    /// <response code="400">Bad request</response>
     [HttpGet("statdaily")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<StatsResponseDTO> GetDailyStats([FromQuery] StatsQuestionVersion2DTO statsQuestion)
     {
         try
         {
             var q = new StatsQuestionDTO
             {
-                Date = new DateTime(statsQuestion.Year, statsQuestion.Month, statsQuestion.Day),
+                Date = new DateTime(statsQuestion.Year, statsQuestion.Month, statsQuestion.Day), Id = statsQuestion.Id
             };
             var res = _stateService.GetDailyStats(q);
             return res == null ? NotFound() : Ok(res);
@@ -39,15 +49,25 @@ public class StateControllerVersion2 : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    /// <summary>
+    /// Gets the given months statistics about the light.
+    /// </summary>
+    /// <param name="statsQuestion">The dto containing the lights id and the date associated with statistics</param>
+    /// <returns>Returns the statistics about the light in the given month</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="404">Light not found with this id</response>
+    /// <response code="400">Bad request</response>
     [HttpGet("statmonthly")]
+    [ProducesResponseType(StatusCodes.Status200OK)]    
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<StatsResponseDTO> GetMonthlyStats([FromQuery] StatsQuestionVersion2DTO statsQuestion)
     {
         try
         {
             var q = new StatsQuestionDTO
             {
-                Date = new DateTime(statsQuestion.Year, statsQuestion.Month, statsQuestion.Day),
+                Date = new DateTime(statsQuestion.Year, statsQuestion.Month, statsQuestion.Day),Id = statsQuestion.Id
             };
             var res = _stateService.GetMonthlyStats(q);
             return res == null ? NotFound() : Ok(res);
@@ -59,13 +79,21 @@ public class StateControllerVersion2 : ControllerBase
         }
     }
 
-
+    /// <summary>
+    /// Switch a lights state
+    /// </summary>
+    /// <param name="dto">The dto containing the lights id and the new state with the optional error message</param>
+    /// <returns>Returns the light in the new state</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="400">Bad request</response>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<AndonStateDTO> SwitchState([FromBody] AndonStateDTO dto)
     {
         try
         {
-            return _lightService.SwitchState(dto);
+            return Ok(_lightService.SwitchState(dto));
 
         }
         catch (Exception e)
@@ -74,7 +102,15 @@ public class StateControllerVersion2 : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    /// <summary>
+    /// Retrieves all the states of the lights
+    /// </summary>
+    /// <returns>Returns the states of the lights</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="400">Bad request</response>
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<List<AndonStateDTO>> GetAllState()
     {
         try
@@ -88,8 +124,16 @@ public class StateControllerVersion2 : ControllerBase
         }
     }
 
-
+    /// <summary>
+    /// Retrieves the state of the light with the id
+    /// </summary>
+    /// <param name="id">The light's id</param>
+    /// <returns>Returns the lights state</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="400">Bad request</response>
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<AndonStateDTO> GetState(int id)
     {
         try

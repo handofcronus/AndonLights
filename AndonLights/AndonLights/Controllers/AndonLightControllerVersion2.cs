@@ -22,9 +22,16 @@ public class AndonLightControllerVersion2 : ControllerBase
     }
 
 
-    
+    /// <summary>
+    /// Retrieves all the lights in full detail.
+    /// </summary>
+    /// <returns>Returns the lights</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="404">Lights not found</response>
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<IEnumerable<AndonLightDTO>> GetLights()
     {
         try
@@ -40,8 +47,16 @@ public class AndonLightControllerVersion2 : ControllerBase
 
     }
 
-
+    /// <summary>
+    /// Retrieves a light in full detail.
+    /// </summary>
+    /// <param name="id">The light's id</param>
+    /// <returns>Returns the light</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="404"> Light not found</response>
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<AndonLightDTO> GetLight(int id)
     {
         try
@@ -58,8 +73,16 @@ public class AndonLightControllerVersion2 : ControllerBase
         }
     }
 
-
+    /// <summary>
+    /// Creates a light with the given name.
+    /// </summary>
+    /// <param name="name">The light's name</param>
+    /// <returns>Returns the result of the request</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="400">Bad request</response>
     [HttpPost("{name}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<AndonLightDTO> CreateLight(string name)
     {
         try
@@ -75,8 +98,16 @@ public class AndonLightControllerVersion2 : ControllerBase
         }
 
     }
-
+    /// <summary>
+    /// Deletes a light with the id.
+    /// </summary>
+    /// <param name="id">The light's id</param>
+    /// <returns>Returns the result of the request</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="404">Light not found with this id</response>
     [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult DeleteLight(int id)
     {
         try
@@ -91,8 +122,16 @@ public class AndonLightControllerVersion2 : ControllerBase
         }
     }
 
-
+    /// <summary>
+    /// Update a lights name.
+    /// </summary>
+    /// <param name="andonLight">Dto with the light's id and name</param>
+    /// <returns>Returns the changed light</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="404">Light not found with this id</response>
     [HttpPatch]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<AndonLightDTO> UpdateLight([FromBody] UpdateLightDTO andonLight)
     {
         try
@@ -107,14 +146,47 @@ public class AndonLightControllerVersion2 : ControllerBase
         }
 
     }
-
+    /// <summary>
+    /// Request an ApiKey for a new client.
+    /// </summary>
+    /// <param name="name">Client's identifier</param>
+    /// <returns>Returns an ApiKey for the client</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="400">BadRequest</response>
     [HttpPost("/client/{name}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<string> RequestApiKey(string name)
     {
         try
         {
             var res = _clientService.CreateClient(name);
             return Ok(res.ApiKey);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error happened at " + nameof(RequestApiKey), e);
+            return BadRequest(e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Request a new apiKey for an existing client.
+    /// </summary>
+    /// <param name="name">Client's identifier</param>
+    /// <returns>Returns a new ApiKey for the client</returns>
+    /// <response code="200">Ok</response>
+    /// <response code="400">BadRequest</response>
+
+    [HttpPost("/client/newKey/{name}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public ActionResult<string> RequestNewApiKey(string name)
+    {
+        try
+        {
+            var res = _clientService.RequestNewKey(name);
+            return Ok(res.NewApiKey);
         }
         catch (Exception e)
         {
