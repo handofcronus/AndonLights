@@ -57,8 +57,6 @@ public class AndonLightsDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Session>().ToTable("Sessions");
         modelBuilder.Entity<Session>().HasKey(s => s.Id);
-//modelBuilder.Entity<Session>().Property(s=>s.ErrorMessage).HasMaxLength(150);
-
 
         modelBuilder.Entity<State>().ToTable("States");
         modelBuilder.Entity<State>().HasKey(s => s.ID);
