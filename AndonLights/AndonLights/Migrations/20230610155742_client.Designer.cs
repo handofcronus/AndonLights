@@ -2,6 +2,7 @@
 using AndonLights.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AndonLights.Migrations
 {
     [DbContext(typeof(AndonLightsDbContext))]
-    partial class AndonLightsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230610155742_client")]
+    partial class client
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,15 +70,6 @@ namespace AndonLights.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<string>("NewApiKey")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("NewKeyRequested")
-                        .HasColumnType("boolean");
-
-                    b.Property<ZonedDateTime>("OldKeyDeadline")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

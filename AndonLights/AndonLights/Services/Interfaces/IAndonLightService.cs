@@ -11,7 +11,7 @@ public interface IAndonLightService
 
     public bool DeleteLight(int id);
 
-    public AndonLightDTO? UpdateLight(AndonLightDTO andonLight);
+    public AndonLightDTO? UpdateLight(UpdateLightDTO dto);
 
     public AndonStateDTO GetState(int id);
     public IEnumerable<AndonStateDTO> GetStates();

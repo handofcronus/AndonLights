@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 //using Microsoft.Extensions.Configuration;
-using System.Configuration;
-using System.Runtime.CompilerServices;
+
 
 namespace AndonLights.DAL;
 
@@ -15,7 +14,8 @@ public class AndonLightsDbContext : DbContext
     public DbSet<State> States { get; set; }
     public DbSet<AndonLight> AndonLights { get; set; }
     public DbSet<MonthlyStateStats> MonthlyStateStats{ get; set; }
-    public DbSet<DailyStateStats> dailyStateStats{ get; set; }
+    public DbSet<DailyStateStats> DailyStateStats{ get; set; }
+    public DbSet<Client> Clients { get; set; }
     public AndonLightsDbContext(DbContextOptions<AndonLightsDbContext> options ):base(options)
     {
        
@@ -57,7 +57,7 @@ public class AndonLightsDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Session>().ToTable("Sessions");
         modelBuilder.Entity<Session>().HasKey(s => s.Id);
-        modelBuilder.Entity<Session>().Property(s=>s.ErrorMessage).HasMaxLength(150);
+//modelBuilder.Entity<Session>().Property(s=>s.ErrorMessage).HasMaxLength(150);
 
 
         modelBuilder.Entity<State>().ToTable("States");
@@ -84,16 +84,18 @@ public class AndonLightsDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<AndonLight>().Property(a => a.CurrentState).HasConversion<string>();
         modelBuilder.Entity<AndonLight>().Property(a => a.Name).HasMaxLength(150);
+        modelBuilder.Entity<AndonLight>().Property(a => a.LastErrorMessage).HasMaxLength(250);
 
 
         modelBuilder.Entity<DailyStateStats>().ToTable("DailyStateStats");
         modelBuilder.Entity<DailyStateStats>().HasKey(a => a.Id);
         
-
-
         modelBuilder.Entity<MonthlyStateStats>().ToTable("MonthlyStateStats");
         modelBuilder.Entity<MonthlyStateStats>().HasKey(a => a.Id);
-        
+
+
+        modelBuilder.Entity<Client>().HasKey(clients => clients.Id);
+        modelBuilder.Entity<Client>().ToTable("Clients");
 
     }
 

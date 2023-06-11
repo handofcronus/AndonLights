@@ -12,7 +12,7 @@ public interface IAndonLightRepo
     public AndonLight GetLightByIdWithoutChildren(int id);
     public AndonLight Insert(string name);
     public bool DeleteLight(int id);
-    public AndonLight? UpdateLight(AndonLight andonLight);
+    public AndonLight? UpdateLight(UpdateLightDTO andonLight);
     public AndonLight SwitchState(AndonLight param,string errorMessage);
 
     

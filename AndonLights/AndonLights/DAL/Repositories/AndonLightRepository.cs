@@ -9,8 +9,8 @@ namespace AndonLights.Repositories;
 
 public class AndonLightRepository : IAndonLightRepo
 {
-    private AndonLightsDbContext _dbContext;
-    private ILogger<AndonLightRepository> _logger;
+    private readonly AndonLightsDbContext _dbContext;
+    private readonly ILogger<AndonLightRepository> _logger;
 
     public AndonLightRepository(AndonLightsDbContext dbContext, ILogger<AndonLightRepository> logger)
     {
@@ -71,16 +71,16 @@ public class AndonLightRepository : IAndonLightRepo
         return light;
     }
 
-    public AndonLight? UpdateLight(AndonLight andonLightDTO)
+    public AndonLight? UpdateLight(UpdateLightDTO andonLight)
     {
-        var light = _dbContext.AndonLights.Single(x => x.Id == andonLightDTO.Id);
+        var light = _dbContext.AndonLights.Single(x => x.Id == andonLight.Id);
         if (light is null)
         {
             return null;
         }
         else
         {
-            light = andonLightDTO;
+            light.Name= andonLight.Name;
         }
         _dbContext.SaveChanges();
         return light;
