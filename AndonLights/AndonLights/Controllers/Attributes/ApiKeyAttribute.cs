@@ -6,7 +6,7 @@ namespace AndonLights.Controllers.Attributes;
 
 public class ApiKeyAttribute : Attribute, IAuthorizationFilter
 {
-    private string ApiKeyHeaderName = "Andon-Api-key";
+    private readonly string  ApiKeyHeaderName = "Andon-Api-Key";
     private readonly IClientService _clientService; 
 
     public ApiKeyAttribute(IClientService clientService)

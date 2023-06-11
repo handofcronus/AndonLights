@@ -2,6 +2,7 @@
 using AndonLights.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AndonLights.Migrations
 {
     [DbContext(typeof(AndonLightsDbContext))]
-    partial class AndonLightsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230611134623_seed")]
+    partial class seed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,7 +196,7 @@ namespace AndonLights.Migrations
                         {
                             Id = 901,
                             InTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16856142000000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
-                            LenghtOfSessionInMinutes = 89.0,
+                            LenghtOfSessionInMinutes = 0.0,
                             OutTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16856195400000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
                             StateId = 901
                         },
@@ -201,7 +204,7 @@ namespace AndonLights.Migrations
                         {
                             Id = 902,
                             InTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16856195400000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
-                            LenghtOfSessionInMinutes = 840.0,
+                            LenghtOfSessionInMinutes = 0.0,
                             OutTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16856699400000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
                             StateId = 902
                         },
@@ -209,7 +212,7 @@ namespace AndonLights.Migrations
                         {
                             Id = 903,
                             InTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16856699400000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
-                            LenghtOfSessionInMinutes = 385.0,
+                            LenghtOfSessionInMinutes = 0.0,
                             OutTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16856930400000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
                             StateId = 901
                         },
@@ -217,7 +220,7 @@ namespace AndonLights.Migrations
                         {
                             Id = 904,
                             InTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16856930400000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
-                            LenghtOfSessionInMinutes = 215.0,
+                            LenghtOfSessionInMinutes = 0.0,
                             OutTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16857059400000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
                             StateId = 902
                         },
@@ -225,7 +228,7 @@ namespace AndonLights.Migrations
                         {
                             Id = 905,
                             InTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16857059400000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
-                            LenghtOfSessionInMinutes = 121.0,
+                            LenghtOfSessionInMinutes = 0.0,
                             OutTime = new NodaTime.ZonedDateTime(NodaTime.Instant.FromUnixTimeTicks(16857132000000000L), NodaTime.TimeZones.TzdbDateTimeZoneSource.Default.ForId("UTC")),
                             StateId = 903
                         });

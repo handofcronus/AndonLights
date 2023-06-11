@@ -70,11 +70,19 @@ public class ClientService : IClientService
     public Client RequestNewKey(string name)
     {
         var client = _dbContext.Clients.Where(c => c.Name == name).Single();
-        var dealine = DateTime.Now.AddHours(12);
-        client.NewKeyRequested = true;
-        client.OldKeyDeadline = new ZonedDateTime(new LocalDateTime(dealine.Year,dealine.Month,dealine.Day,dealine.Hour,dealine.Minute),DateTimeZone.Utc,Offset.Zero);
-        client.NewApiKey = _apiKeyService.GenerateApiKey();
-        _dbContext.SaveChanges();
-        return client;
+        if(client.NewKeyRequested)
+        {
+            throw new InvalidOperationException("Already requested new key, wait 12 hours.");
+        }
+        else
+        {
+            var dealine = DateTime.Now.AddHours(12);
+            client.NewKeyRequested = true;
+            client.OldKeyDeadline = new ZonedDateTime(new LocalDateTime(dealine.Year, dealine.Month, dealine.Day, dealine.Hour, dealine.Minute), DateTimeZone.Utc, Offset.Zero);
+            client.NewApiKey = _apiKeyService.GenerateApiKey();
+            _dbContext.SaveChanges();
+            return client;
+        }
+        
     }
 }

@@ -33,9 +33,8 @@ public class AndonLight
         };
         LastErrorMessage = string.Empty;
     }
-    protected AndonLight() 
+    public AndonLight() 
     {
-        States = new List<State>();
         Name = "Default";
         LastErrorMessage = string.Empty;
     }

@@ -13,8 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApiDocument();
 
 builder.Services.AddHostedService<TimedHostedService>(); 
@@ -57,8 +55,6 @@ app.Logger.LogInformation(connString);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
     app.UseOpenApi();
     app.UseSwaggerUi3();
 }

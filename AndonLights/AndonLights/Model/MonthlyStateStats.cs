@@ -1,6 +1,12 @@
-﻿namespace AndonLights.Model;
+﻿using NodaTime;
+
+namespace AndonLights.Model;
 
 public class MonthlyStateStats : StatsBase
 {
-    public MonthlyStateStats() :base() { }
+    public MonthlyStateStats(ZonedDateTime time) :base(time) { }
+    public MonthlyStateStats()
+    {
+
+    }
 }

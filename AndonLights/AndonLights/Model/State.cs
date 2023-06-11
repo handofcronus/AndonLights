@@ -1,5 +1,6 @@
 ﻿
 using NodaTime;
+using System.Collections;
 
 namespace AndonLights.Model;
 
@@ -23,8 +24,13 @@ public class State
 
     public void UpdateDailyStats()
     {
+        
         DailyStateStats todaysStats = GetADailyStatOrDefault(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc));
         var sessionsThisDay = GetSessionsFromADay(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc), ClosedSessions);
+        if(sessionsThisDay.Count==0)
+        {
+            return;
+        }    
         todaysStats.Calc(sessionsThisDay);
         if (!DailyStats.Contains(todaysStats))
         {
@@ -36,6 +42,10 @@ public class State
     {
         MonthlyStateStats monthlyStateStats = GetAMonthlyStatsOrDefault(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc));
         var sessionsThisMonth = GetSessionsFromAMonth(new ZonedDateTime(SystemClock.Instance.GetCurrentInstant(), DateTimeZone.Utc), ClosedSessions);
+        if (sessionsThisMonth.Count == 0)
+        {
+            return;
+        }
         monthlyStateStats.Calc(sessionsThisMonth);
         if(!MonthlyStats.Contains(monthlyStateStats))
         {
@@ -88,7 +98,7 @@ public class State
                 return dailyStat;
             }
         }
-        return new DailyStateStats();
+        return new DailyStateStats(dateTime);
     }
     private MonthlyStateStats GetAMonthlyStatsOrDefault(ZonedDateTime dateTime)
     {
@@ -99,7 +109,7 @@ public class State
                 return monthlyStat;
             }
         }
-        return new MonthlyStateStats();
+        return new MonthlyStateStats(dateTime);
     }
 
 }

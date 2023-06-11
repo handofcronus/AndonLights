@@ -1,27 +1,27 @@
 {
-  "openapi": "3.0.1",
+  "x-generator": "NSwag v13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))",
+  "openapi": "3.0.0",
   "info": {
-    "title": "AndonLights",
-    "version": "1.0"
+    "title": "My Title",
+    "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "https://localhost:7058"
+    }
+  ],
   "paths": {
     "/api/v1/AndonLight": {
       "get": {
         "tags": [
           "AndonLight"
         ],
+        "summary": "Retrieves all the lights in full detail.",
+        "operationId": "AndonLight_GetLights",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AndonLightDTO"
-                  }
-                }
-              },
               "application/json": {
                 "schema": {
                   "type": "array",
@@ -29,13 +29,15 @@
                     "$ref": "#/components/schemas/AndonLightDTO"
                   }
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Lights not found",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AndonLightDTO"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -46,19 +48,33 @@
         "tags": [
           "AndonLight"
         ],
+        "summary": "Deletes a light with the id.",
+        "operationId": "AndonLight_DeleteLight",
         "parameters": [
           {
             "name": "id",
             "in": "query",
+            "description": "The light's id",
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Ok"
+          },
+          "404": {
+            "description": "Light not found with this id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       },
@@ -66,42 +82,38 @@
         "tags": [
           "AndonLight"
         ],
+        "summary": "Update a lights name.",
+        "operationId": "AndonLight_UpdateLight",
         "requestBody": {
+          "x-name": "andonLight",
+          "description": "Dto with the light's id and name",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateLightDTO"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLightDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLightDTO"
-              }
             }
-          }
+          },
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AndonLightDTO"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AndonLightDTO"
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "404": {
+            "description": "Light not found with this id",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AndonLightDTO"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -114,34 +126,38 @@
         "tags": [
           "AndonLight"
         ],
+        "summary": "Retrieves a light in full detail.",
+        "operationId": "AndonLight_GetLight",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "The light's id",
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AndonLightDTO"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AndonLightDTO"
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AndonLightDTO"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -154,33 +170,37 @@
         "tags": [
           "AndonLight"
         ],
+        "summary": "Creates a light with the given name.",
+        "operationId": "AndonLight_CreateLight",
         "parameters": [
           {
             "name": "name",
             "in": "path",
             "required": true,
+            "description": "The light's name",
             "schema": {
               "type": "string"
-            }
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AndonLightDTO"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AndonLightDTO"
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AndonLightDTO"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -188,46 +208,109 @@
         }
       }
     },
-    "/daily": {
+    "/api/v2/AndonLightControllerVersion2": {
       "get": {
         "tags": [
-          "State"
+          "AndonLightControllerVersion2"
         ],
+        "summary": "Retrieves all the lights in full detail.",
+        "operationId": "AndonLightControllerVersion2_GetLights",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AndonLightDTO"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Lights not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "AndonLightControllerVersion2"
+        ],
+        "summary": "Deletes a light with the id.",
+        "operationId": "AndonLightControllerVersion2_DeleteLight",
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "query",
+            "description": "The light's id",
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
-          },
-          {
-            "name": "Date",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok"
+          },
+          "404": {
+            "description": "Light not found with this id",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatsResponseDTO"
-                }
-              },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StatsResponseDTO"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
-              },
-              "text/json": {
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "AndonLightControllerVersion2"
+        ],
+        "summary": "Update a lights name.",
+        "operationId": "AndonLightControllerVersion2_UpdateLight",
+        "requestBody": {
+          "x-name": "andonLight",
+          "description": "Dto with the light's id and name",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLightDTO"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StatsResponseDTO"
+                  "$ref": "#/components/schemas/AndonLightDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Light not found with this id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -235,11 +318,186 @@
         }
       }
     },
-    "/monthly": {
+    "/api/v2/AndonLightControllerVersion2/{id}": {
+      "get": {
+        "tags": [
+          "AndonLightControllerVersion2"
+        ],
+        "summary": "Retrieves a light in full detail.",
+        "operationId": "AndonLightControllerVersion2_GetLight",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The light's id",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AndonLightDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/AndonLightControllerVersion2/{name}": {
+      "post": {
+        "tags": [
+          "AndonLightControllerVersion2"
+        ],
+        "summary": "Creates a light with the given name.",
+        "operationId": "AndonLightControllerVersion2_CreateLight",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "The light's name",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AndonLightDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client/{name}": {
+      "post": {
+        "tags": [
+          "AndonLightControllerVersion2"
+        ],
+        "summary": "Request an ApiKey for a new client.",
+        "operationId": "AndonLightControllerVersion2_RequestApiKey",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "Client's identifier",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client/newKey/{name}": {
+      "post": {
+        "tags": [
+          "AndonLightControllerVersion2"
+        ],
+        "summary": "Request a new apiKey for an existing client.",
+        "operationId": "AndonLightControllerVersion2_RequestNewApiKey",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "Client's identifier",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/State/daily": {
       "get": {
         "tags": [
           "State"
         ],
+        "summary": "Gets the given days statistics about the light.",
+        "operationId": "State_GetDailyStats",
         "parameters": [
           {
             "name": "Id",
@@ -247,7 +505,8 @@
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
+            },
+            "x-position": 1
           },
           {
             "name": "Date",
@@ -255,26 +514,98 @@
             "schema": {
               "type": "string",
               "format": "date-time"
-            }
+            },
+            "x-position": 2
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatsResponseDTO"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StatsResponseDTO"
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Light not found with this id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/State/monthly": {
+      "get": {
+        "tags": [
+          "State"
+        ],
+        "summary": "Gets the given months statistics about the light.",
+        "operationId": "State_GetMonthlyStats",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StatsResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Light not found with this id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -287,42 +618,38 @@
         "tags": [
           "State"
         ],
+        "summary": "Switch a lights state",
+        "operationId": "State_SwitchState",
         "requestBody": {
+          "x-name": "dto",
+          "description": "The dto containing the lights id and the new state with the optional error message",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AndonStateDTO"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AndonStateDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AndonStateDTO"
-              }
             }
-          }
+          },
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AndonStateDTO"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AndonStateDTO"
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AndonStateDTO"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -333,18 +660,12 @@
         "tags": [
           "State"
         ],
+        "summary": "Retrieves all the states of the lights",
+        "operationId": "State_GetAllState",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AndonStateDTO"
-                  }
-                }
-              },
               "application/json": {
                 "schema": {
                   "type": "array",
@@ -352,13 +673,15 @@
                     "$ref": "#/components/schemas/AndonStateDTO"
                   }
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AndonStateDTO"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -371,34 +694,316 @@
         "tags": [
           "State"
         ],
+        "summary": "Retrieves the state of the light with the id",
+        "operationId": "State_GetState",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "The light's id",
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Ok",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AndonStateDTO"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AndonStateDTO"
                 }
-              },
-              "text/json": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/StateControllerVersion2/statdaily": {
+      "get": {
+        "tags": [
+          "StateControllerVersion2"
+        ],
+        "summary": "Gets the given days statistics about the light.",
+        "operationId": "StateControllerVersion2_GetDailyStats",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Year",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Month",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Day",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Light not found with this id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/StateControllerVersion2/statmonthly": {
+      "get": {
+        "tags": [
+          "StateControllerVersion2"
+        ],
+        "summary": "Gets the given months statistics about the light.",
+        "operationId": "StateControllerVersion2_GetMonthlyStats",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Year",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Month",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Day",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Light not found with this id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/StateControllerVersion2": {
+      "post": {
+        "tags": [
+          "StateControllerVersion2"
+        ],
+        "summary": "Switch a lights state",
+        "operationId": "StateControllerVersion2_SwitchState",
+        "requestBody": {
+          "x-name": "dto",
+          "description": "The dto containing the lights id and the new state with the optional error message",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AndonStateDTO"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AndonStateDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "StateControllerVersion2"
+        ],
+        "summary": "Retrieves all the states of the lights",
+        "operationId": "StateControllerVersion2_GetAllState",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AndonStateDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/StateControllerVersion2/{id}": {
+      "get": {
+        "tags": [
+          "StateControllerVersion2"
+        ],
+        "summary": "Retrieves the state of the light with the id",
+        "operationId": "StateControllerVersion2_GetState",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The light's id",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AndonStateDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -411,14 +1016,14 @@
     "schemas": {
       "AndonLightDTO": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "stateCode": {
             "$ref": "#/components/schemas/LightStates"
@@ -435,38 +1040,97 @@
             "type": "string",
             "format": "date-time"
           }
-        },
-        "additionalProperties": false
+        }
       },
-      "AndonStateDTO": {
+      "LightStates": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Green",
+          "Yellow",
+          "Red"
+        ],
+        "enum": [
+          "Green",
+          "Yellow",
+          "Red"
+        ]
+      },
+      "ProblemDetails": {
         "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateLightDTO": {
+        "type": "object",
+        "additionalProperties": false,
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
           },
-          "state": {
-            "type": "string",
-            "nullable": true
-          },
-          "errorMessage": {
-            "type": "string",
-            "nullable": true
+          "name": {
+            "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
-      "LightStates": {
-        "enum": [
-          0,
-          1,
-          2
-        ],
-        "type": "integer",
-        "format": "int32"
+      "StatsResponseDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "greenStats": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StatsBaseDTO"
+              }
+            ]
+          },
+          "yellowStats": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StatsBaseDTO"
+              }
+            ]
+          },
+          "redStats": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StatsBaseDTO"
+              }
+            ]
+          }
+        }
       },
       "StatsBaseDTO": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "numberOfEntries": {
             "type": "integer",
@@ -480,37 +1144,24 @@
             "type": "string",
             "format": "date-time"
           }
-        },
-        "additionalProperties": false
+        }
       },
-      "StatsResponseDTO": {
+      "AndonStateDTO": {
         "type": "object",
-        "properties": {
-          "greenStats": {
-            "$ref": "#/components/schemas/StatsBaseDTO"
-          },
-          "yellowStats": {
-            "$ref": "#/components/schemas/StatsBaseDTO"
-          },
-          "redStats": {
-            "$ref": "#/components/schemas/StatsBaseDTO"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateLightDTO": {
-        "type": "object",
+        "additionalProperties": false,
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
           },
-          "name": {
+          "state": {
+            "type": "string"
+          },
+          "errorMessage": {
             "type": "string",
             "nullable": true
           }
-        },
-        "additionalProperties": false
+        }
       }
     }
   }

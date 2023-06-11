@@ -10,11 +10,15 @@ public abstract class StatsBase
     public double MinutesSpentInState { get; set; }
     public ZonedDateTime DateOfStats { get; set; }
 
-    protected StatsBase() 
+    protected StatsBase()
+    {
+
+    }
+    protected StatsBase(ZonedDateTime timeOfStat) 
     {
         NumberOfEntries = 0;
         MinutesSpentInState = 0.0;
-        DateOfStats = new ZonedDateTime( SystemClock.Instance.GetCurrentInstant(),DateTimeZone.Utc);
+        DateOfStats = timeOfStat;
     }
     public void Calc(List<Session> sessionsThisDay)
     {
