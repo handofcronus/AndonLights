@@ -1,7 +1,12 @@
 ﻿using AndonLights.Controllers.Attributes;
+using AndonLights.Controllers.Hubs;
+using AndonLights.Controllers.Interfaces;
 using AndonLights.DTOs;
+using AndonLights.Model;
 using AndonLights.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+
 
 namespace AndonLights.Controllers;
 
@@ -13,11 +18,16 @@ public class StateControllerVersion2 : ControllerBase
     private readonly IStateService _stateService;
     private readonly ILogger _logger;
     private readonly IAndonLightService _lightService;
-    public StateControllerVersion2(ILogger<StateController> logger,IStateService service,IAndonLightService lightService)    
+    private readonly IHubContext<SignalRHub, IHubClient> _hubContext;
+    public StateControllerVersion2(ILogger<StateController> logger,
+        IStateService service,
+        IAndonLightService lightService,
+        IHubContext<SignalRHub,IHubClient> hubContext)    
     { 
         _stateService = service;
         _logger = logger;
         _lightService = lightService;
+        _hubContext = hubContext;
     }
 
     /// <summary>
@@ -89,11 +99,13 @@ public class StateControllerVersion2 : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<AndonStateDTO> SwitchState([FromBody] AndonStateDTO dto)
+    public async Task<ActionResult<AndonStateDTO>> SwitchState([FromBody] AndonStateDTO dto)
     {
         try
         {
-            return Ok(_lightService.SwitchState(dto));
+            var res = _lightService.SwitchState(dto);
+            await _hubContext.Clients.All.BroadcastMessage();
+            return Ok(res);
 
         }
         catch (Exception e)

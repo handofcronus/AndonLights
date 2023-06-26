@@ -1,4 +1,4 @@
-using AndonLights.Controllers.Attributes;
+using AndonLights.Controllers.Hubs;
 using AndonLights.DAL;
 using AndonLights.DAL.Repositories.Interfaces;
 using AndonLights.Repositories;
@@ -14,6 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddOpenApiDocument();
+builder.Services.AddSignalR();
+builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder => {
+    builder
+    .WithOrigins("http://localhost:4200")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials();
+}));
 
 builder.Services.AddHostedService<TimedHostedService>(); 
 
@@ -61,9 +69,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
+app.UseRouting();
+app.MapHub<SignalRHub>("/notify");
+app.UseCors("CorsPolicy");
 app.MapControllers();
+app.UseAuthorization();
 
 using (var serviceScope = app.Services.CreateScope())
 {
